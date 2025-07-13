@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# BillTree 
+**BillTree** is a modern billing software tailored for small and medium businesses.
 
-## Getting Started
+## Current Issues
+Small to medium businesses in Nepal often face the following challenges in managing their bills and sales:
 
-First, run the development server:
+- Manual billing processes are time-consuming and error-prone.
+- Lack of organized product and sales tracking hampers efficiency.
+- Difficulty in generating and maintaining clean and digital records.
+- No centralized platform to generate, manage, and store digital receipts.
+- Managing inventory manually leads to stock mismatches and delays.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Solution
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**BillTree** simplifies product billing, manages receipts, and generates printable barcodes - all with a clean, easy-to-use interface. It helps businesses digitize their billing with ease and maintain records with confidence.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend/Backend:** Next.js + React
+- **Database:** Supabase
 
-## Learn More
+## Contributors
 
-To learn more about Next.js, take a look at the following resources:
+- [Vision Sapkota](https://github.com/VisionSapkota) - Developer
+- [Kritistha Khatiwada](https://github.com/kritistha-ai) - Cyber Security
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Copyright
+© BillTree. All Right Reserved.

@@ -38,7 +38,7 @@ const page = () => {
           </section>
 
           <footer className="text-center text-sm text-gray-500 border-t pt-4 mt-10">
-            &copy; {new Date().getFullYear()} Sauji Ko Calculator. All rights reserved.
+            &copy; {new Date().getFullYear()} BillTree. All rights reserved.
           </footer>
         </div>
       </main>
