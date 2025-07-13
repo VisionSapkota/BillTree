@@ -40,15 +40,14 @@ const AddProducts = () => {
 
         let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
 
-        const { data } = await supabase.from("product_list").select("productDetails").eq("id", id)
+        const { data } = await supabase.from("productList").select("productDetails").eq("id", id)
 
         const productData = [
             ...(data?.[0]?.productDetails || []),
             currentProductData,
         ];
 
-
-        const { error } = await supabase.from("product_list").upsert([{
+        const { error } = await supabase.from("productList").upsert([{
             id: id,
             productDetails: productData
         }], { onConflict: ['id'] })

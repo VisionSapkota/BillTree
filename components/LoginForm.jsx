@@ -3,7 +3,7 @@ import NewUser from "./NewUser"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import Load  from "./Load"
+import Load from "./Load"
 import { supabase } from "@/lib/supabaseClient"
 
 const LoginForm = () => {
@@ -17,8 +17,13 @@ const LoginForm = () => {
         e.preventDefault()
         setIsLoad(true)
         const { error } = await supabase.auth.signInWithPassword({ email, password })
-        error ? setError(error.message) : router.push("/dashboard");
-        setIsLoad(false)
+        
+        if (error) { 
+            setError(error.message);
+            setIsLoad(false) 
+        } else {
+            router.push("/dashboard");
+        }
     }
 
     return (

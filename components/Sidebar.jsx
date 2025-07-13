@@ -23,7 +23,7 @@ const Sidebar = () => {
             {/* Sidebar */}
             <nav id="hideScrollbar" className={`bg-[#111] select-none text-white w-60 h-screen flex flex-col items-center
                 transform transition-transform duration-300 ease-in-out overflow-y-auto
-                fixed z-50
+                fixed z-2
                 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
                 md:translate-x-0`}>
 

@@ -12,8 +12,13 @@ const Logout = () => {
     const handleLogout = async () => {
         setIsLoading(true)
         const { error } = await supabase.auth.signOut()
-        error ? alert(error.message) : router.push("/login")
-        setIsLoading(false)
+
+        if (error) {
+            alert(error.message);
+            setIsLoading(false)
+        } else {
+            router.push("/login");
+        }
     }
 
     return (

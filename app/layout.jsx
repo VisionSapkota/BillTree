@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "BillTree",
-  description: "BillTree is an easy-to-use Billing software designed for everyone. It's a packaged solution to help you manage your inventory, receipts, and barcodes — all in one place.",
+  description: "BillTree is an easy-to-use billing software designed for everyone. It's a packaged solution to help you manage your inventory, receipts, and barcodes — all in one place.",
 };
 
 export default function RootLayout({ children }) {

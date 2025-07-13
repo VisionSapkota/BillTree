@@ -6,28 +6,56 @@ import { supabase } from "@/lib/supabaseClient";
 
 const ProductList = () => {
     const [finalData, setFinalData] = useState([])
+    const [isDelete, setIsDelete] = useState(false)
 
     useEffect(() => {
-        (
-            async () => {
-                const { data: { user }, error: userError } = await supabase.auth.getUser();
-                if (userError) {
-                    alert("User Not Found.", userError);
-                    return
-                }
-
-                const { data, error } = await supabase.from("product_list").select("productDetails").eq("id", user.id)
-                if (error) {
-                    alert(error.message)
-                }
-                
-                setFinalData(data?.[0]?.productDetails || [])
-                console.log(finalData)
-            }
-        )();
-
+        list()
     }, [])
+    
 
+    const list = async () => {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+            alert("User Not Found.", userError);
+            return
+        }
+
+        const { data, error } = await supabase.from("productList").select("productDetails").eq("id", user.id)
+        if (error) {
+            alert(error.message)
+        }
+
+        setFinalData(data?.[0]?.productDetails || [])
+    }
+
+    const deleteHandler = async (index) => {
+        setIsDelete(true)
+
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+            alert("User Not Found.", userError);
+            return
+        }
+
+        const { error: fetchError } = await supabase.from("productList").select("productDetails").eq("id", user.id)
+
+        if (fetchError) {
+            alert(fetchError.message)
+            return;
+        }
+
+        finalData.splice(index, 1)
+        const { error: error } = await supabase.from("productList").upsert([
+            {
+                id: user.id,
+                productDetails: finalData
+            }
+        ], { onConflict: ['id'] })
+
+        if (error) alert(error.message)
+        list()
+        setIsDelete(false)
+    }
 
     return (
         <table className="w-full text-left border border-gray-200 whitespace-nowrap">
@@ -53,11 +81,11 @@ const ProductList = () => {
                         <td className="p-2 border-b border-gray-200">{value[0].sp}</td>
                         <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
                         <td className="p-2 border-b border-gray-200">
-                            <span className="text-green-600 font-medium">In Stock</span>
+                            <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
                         </td>
                         <td className="p-2 border-b border-gray-200 flex gap-2">
                             <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
-                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"><FontAwesomeIcon icon={faTrash} /></button>
+                            <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
                         </td>
                     </tr>
                 ))}
