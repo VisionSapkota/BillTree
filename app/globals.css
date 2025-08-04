@@ -28,3 +28,69 @@ body {
 #hideScrollbar::-webkit-scrollbar {
   display: none;
 }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #print-receipt, #print-receipt * {
+        visibility: visible;
+    }
+
+    #print-receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #print-receipt button,
+    #print-receipt input,
+    #print-receipt #action,
+    .print-hidden {
+        display: none !important;
+    }
+
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100 {
+        background: none !important;
+    }
+
+    .shadow,
+    .shadow-sm,
+    .outline-none {
+        box-shadow: none !important;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse !important;
+    }
+
+    th, td {
+        border: 1px solid #000 !important;
+        padding: 4px !important;
+        font-size: 12px !important;
+    }
+
+    .border {
+        border-color: #000 !important;
+    }
+
+    .rounded {
+        border-radius: 0 !important;
+    }
+
+    .text-black {
+        color: #000 !important;
+    }
+
+    /* Avoid page break inside table rows */
+    table, tr, td, th {
+        page-break-inside: avoid !important;
+    }
+}

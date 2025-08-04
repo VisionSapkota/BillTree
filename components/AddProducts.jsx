@@ -6,7 +6,7 @@ import Load from "./Load"
 const AddProducts = () => {
     const [productName, setProductName] = useState("")
     const [CP, setCP] = useState("")
-    const [SP, setSP] = useState("")
+    const [MP, setMP] = useState("")
     const [stock, setStock] = useState("")
     const [barcodeNum, setBarcodeNum] = useState("")
     const [barcodeload, setBarcodesetload] = useState(false)
@@ -30,11 +30,17 @@ const AddProducts = () => {
         e.preventDefault();
         setIsLoad(true)
 
+        if (!barcodeNum) {
+            alert("Generate barcode.");
+            setIsLoad(false)
+            return;
+        }
+
         const currentProductData = [{
             productName: productName,
             barcode: barcodeNum,
             cp: CP,
-            sp: SP,
+            mp: MP,
             stock: stock
         }]
 
@@ -52,11 +58,11 @@ const AddProducts = () => {
             productDetails: productData
         }], { onConflict: ['id'] })
 
-        if (error) console.log(error.message)
+        if (error) alert(error.message)
 
         setProductName("")
         setCP("")
-        setSP("")
+        setMP("")
         setStock("")
         setBarcodeNum("")
         setIsLoad(false)
@@ -72,26 +78,26 @@ const AddProducts = () => {
 
             <div>
                 <label className="block font-medium text-gray-700">Rate(Cost Price)</label>
-                <input type="number" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={CP} onChange={(e) => setCP(e.target.value)}
+                <input type="number" min="0" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={CP} onChange={(e) => setCP(e.target.value)}
                     placeholder="Enter rate" required />
             </div>
 
             <div>
-                <label className="block font-medium text-gray-700">Rate(Selling Price)</label>
-                <input type="number" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={SP} onChange={(e) => setSP(e.target.value)}
+                <label className="block font-medium text-gray-700">Rate(Marked Price)</label>
+                <input type="number" min="0" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={MP} onChange={(e) => setMP(e.target.value)}
                     placeholder="Enter rate" required />
             </div>
 
             <div>
                 <label className="block font-medium text-gray-700">Stock</label>
-                <input type="number" step="1" className="w-full p-2 border border-gray-300 rounded outline-none" value={stock} onChange={(e) => setStock(e.target.value)}
+                <input type="number" min="0" step="1" className="w-full p-2 border border-gray-300 rounded outline-none" value={stock} onChange={(e) => setStock(e.target.value)}
                     placeholder="Enter stock amount" required />
             </div>
 
             <div>
                 <label className="block font-medium text-gray-700">Barcode Number</label>
                 <div className="flex gap-2">
-                    <input id="barcodeInput" type="text" className="w-full p-2 border border-gray-300 rounded outline-none" readOnly value={barcodeNum} onChange={(e) => setProductName(e.target.value)}
+                    <input id="barcodeInput" type="text" className="w-full p-2 border border-gray-300 rounded outline-none" readOnly required value={barcodeNum} onChange={(e) => setProductName(e.target.value)}
                         placeholder="Enter barcode number" />
                     <button type="button" onClick={barcodeNumber}
                         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200 cursor-pointer">

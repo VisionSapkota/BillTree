@@ -11,8 +11,9 @@ const ForgotPasswordEmailForm = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         setIsLoad(true)
+        const baseURL = process.env.REACT_APP_BASE_URL;
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "http://localhost:3000/reset/password"
+            redirectTo: `${baseURL}/reset/password`
         })
 
         error ? setMessage(error.message) : setMessage("Please check your email for password reset link.")

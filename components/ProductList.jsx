@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link";
 
 const ProductList = () => {
     const [finalData, setFinalData] = useState([])
@@ -11,7 +12,6 @@ const ProductList = () => {
     useEffect(() => {
         list()
     }, [])
-    
 
     const list = async () => {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -58,39 +58,45 @@ const ProductList = () => {
     }
 
     return (
-        <table className="w-full text-left border border-gray-200 whitespace-nowrap">
-            <thead className="bg-gray-100">
-                <tr>
-                    <th className="p-2 border-b border-gray-200">S.N.</th>
-                    <th className="p-2 border-b border-gray-200">Barcode</th>
-                    <th className="p-2 border-b border-gray-200">Product Name</th>
-                    <th className="p-2 border-b border-gray-200">CP</th>
-                    <th className="p-2 border-b border-gray-200">SP</th>
-                    <th className="p-2 border-b border-gray-200">Quantity</th>
-                    <th className="p-2 border-b border-gray-200">Status</th>
-                    <th className="p-2 border-b border-gray-200">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {finalData.map((value, index) => (
-                    <tr key={index}>
-                        <td className="p-2 border-b border-gray-200">{index + 1}</td>
-                        <td className="p-2 border-b border-gray-200">{value[0].barcode}</td>
-                        <td className="p-2 border-b border-gray-200">{value[0].productName}</td>
-                        <td className="p-2 border-b border-gray-200">{value[0].cp}</td>
-                        <td className="p-2 border-b border-gray-200">{value[0].sp}</td>
-                        <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
-                        <td className="p-2 border-b border-gray-200">
-                            <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
-                        </td>
-                        <td className="p-2 border-b border-gray-200 flex gap-2">
-                            <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
-                            <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
-                        </td>
+        <>
+            <table className="w-full text-left border border-gray-200 whitespace-nowrap">
+                <thead className="bg-gray-100">
+                    <tr>
+                        <th className="p-2 border-b border-gray-200">S.N.</th>
+                        <th className="p-2 border-b border-gray-200">Barcode</th>
+                        <th className="p-2 border-b border-gray-200">Product Name</th>
+                        <th className="p-2 border-b border-gray-200">CP</th>
+                        <th className="p-2 border-b border-gray-200">MP</th>
+                        <th className="p-2 border-b border-gray-200">Quantity</th>
+                        <th className="p-2 border-b border-gray-200">Status</th>
+                        <th className="p-2 border-b border-gray-200">Action</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {finalData.map((value, index) => (
+                        <tr key={index}>
+                            <td className="p-2 border-b border-gray-200">{index + 1}</td>
+                            <td className="p-2 border-b border-gray-200">{value[0].barcode}</td>
+                            <td className="p-2 border-b border-gray-200">{value[0].productName}</td>
+                            <td className="p-2 border-b border-gray-200">{value[0].cp}</td>
+                            <td className="p-2 border-b border-gray-200">{value[0].mp}</td>
+                            <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
+                            <td className="p-2 border-b border-gray-200">
+                                <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
+                            </td>
+                            <td className="p-2 border-b border-gray-200 flex gap-2">
+                                <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
+                                <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <div className="mt-6">
+                <Link href="/barcodes" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer">View All Barcodes</Link>
+            </div>
+        </>
     )
 }
 
