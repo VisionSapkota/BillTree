@@ -185,12 +185,12 @@ const GenerateReceipt = () => {
 
             if (value[0].productName === productName && !isBarcode) {
                 setBarcodeNum(value[0].barcode)
-                setRate(value[0].sp)
+                setRate(value[0].mp)
                 setQuantity(1)
                 return;
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName)
-                setRate(value[0].sp)
+                setRate(value[0].mp)
                 setQuantity(1)
                 return;
             }
