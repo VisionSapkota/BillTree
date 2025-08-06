@@ -18,7 +18,7 @@ const GenerateReceipt = () => {
     const [date, setDate] = useState("")
     const [data, setData] = useState([])
     const [final, setFinal] = useState(0)
-    const [discount, setDiscount] = useState("")
+    const [discount, setDiscount] = useState(0)
     const [grandTotal, setGrandTotal] = useState(0)
     const [defaultData, setDefaultData] = useState({
         store_name: "BillTree",
@@ -138,6 +138,7 @@ const GenerateReceipt = () => {
 
         await quantityChanger(user.id, receiptData)
         setReceiptData([])
+        setDiscount(0)
     }
 
     const quantityChanger = async (id, receiptData) => {
@@ -348,7 +349,7 @@ const GenerateReceipt = () => {
                         <div>
                             <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} className="print:hidden text-right border border-gray-300 p-1 w-20 rounded focus:outline-none text-sm"
                                 placeholder="0%" min="0" max="100" />
-                            <span className="hidden print:block">{discount}%</span>
+                            <span className="hidden print:block">{discount || 0}%</span>
                         </div>
                     </div>
                     <div className="flex justify-between items-center border-t pt-2 mt-2">

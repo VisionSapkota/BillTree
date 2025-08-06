@@ -4,11 +4,13 @@ import JsBarcode from "jsbarcode";
 import { supabase } from "@/lib/supabaseClient";
 
 const Barcodes = () => {
-    const ref = useRef(null)
+    const canvasRef = useRef([])
     const [productsData, setProductsData] = useState([])
+    const [msg, setMsg] = useState("")
 
     useEffect(() => {
         (async () => {
+            setMsg("")
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError) {
                 alert("User not found.", error.message);
@@ -21,13 +23,18 @@ const Barcodes = () => {
                 return;
             }
 
+            if (!data[0].productDetails) {
+                setMsg("No barcodes found.");
+                return;
+            }
+
             setProductsData(data[0].productDetails);
         })();
     }, [])
 
     useEffect(() => {
-        productsData.map(value => {
-            JsBarcode(ref.current, value[0].barcode, {
+        productsData.forEach((value, index) => {
+            JsBarcode(canvasRef.current[index], value[0].barcode, {
                 format: "code128",
                 displayValue: true,
                 fontSize: 18,
@@ -38,7 +45,10 @@ const Barcodes = () => {
 
     return (
         <div>
-            <canvas ref={ref}></canvas>
+            {productsData.map((value, index) => (
+                <canvas key={index} ref={e => (canvasRef.current[index] = e)}></canvas>
+            ))}
+            {msg && <p>{msg}</p>}
         </div>
     )
 }
