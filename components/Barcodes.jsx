@@ -28,12 +28,12 @@ const Barcodes = () => {
                 return;
             }
 
-            setProductsData(data[0].productDetails);
+            setProductsData(data?.[0]?.productDetails);
         })();
     }, [])
 
     useEffect(() => {
-        productsData.forEach((value, index) => {
+        productsData?.forEach((value, index) => {
             JsBarcode(canvasRef.current[index], value[0].barcode, {
                 format: "code128",
                 displayValue: true,
@@ -45,7 +45,7 @@ const Barcodes = () => {
 
     return (
         <div>
-            {productsData.map((value, index) => (
+            {productsData?.map((value, index) => (
                 <canvas key={index} ref={e => (canvasRef.current[index] = e)}></canvas>
             ))}
             {msg && <p>{msg}</p>}

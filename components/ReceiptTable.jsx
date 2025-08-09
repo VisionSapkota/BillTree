@@ -16,19 +16,13 @@ const ReceiptTable = () => {
 
     const list = async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) console.log("User not Found.");
+        if (!user) alert("User not Found.");
 
         const { data, error } = await supabase.from("receipts").select("details").eq('id', user.id).single();
-        if (error) console.log(error.message);
+        if (error) alert(error.message);
 
         setFinalData(data?.details || []);
     }
-
-    useEffect(() => {
-        finalData.map((value, index) => {
-            console.log(value);
-        })
-    }, [finalData])
 
     const deleteHandler = async (index) => {
         setIsDelete(true)

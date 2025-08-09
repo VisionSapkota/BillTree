@@ -91,6 +91,7 @@ const GenerateReceipt = () => {
         setGrandTotal(final - discountAmt)
     }, [receiptData, discount])
 
+    // Submit your Receipt
     const submitReceipt = async (e, isPrint) => {
         e.preventDefault();
 
@@ -141,6 +142,7 @@ const GenerateReceipt = () => {
         setDiscount(0)
     }
 
+    // Change Quantity in product list
     const quantityChanger = async (id, receiptData) => {
         const { data: [{ productDetails }] } = await supabase.from("productList").select("productDetails").eq('id', id)
         console.log("receiptData", receiptData)
@@ -154,9 +156,12 @@ const GenerateReceipt = () => {
         })
     }
 
-    const deleteHandler = (e) => {
-        e.preventDefault()
-        alert("Under Development");
+    // Delete a specific product from receipt
+    const deleteHandler = (index) => {
+        let updatedData = [...receiptData]
+
+        updatedData.splice(index, 1);
+        setReceiptData(updatedData);
     }
 
     // Generate Receipt
@@ -174,7 +179,7 @@ const GenerateReceipt = () => {
             const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
 
             if (error) {
-                console.log(error.message)
+                alert(error.message)
             } else {
                 setFinalData(data.productDetails);
             }
@@ -331,7 +336,7 @@ const GenerateReceipt = () => {
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
                                         <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
-                                        <button onClick={deleteHandler} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
+                                        <button type='button' onClick={() => deleteHandler(index)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
                                     </td>
                                 </tr>
                             ))}
