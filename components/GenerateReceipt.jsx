@@ -1,4 +1,5 @@
 "use client"
+import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -316,7 +317,6 @@ const GenerateReceipt = () => {
                         <thead className="bg-gray-100">
                             <tr>
                                 <th className="p-2 border-b border-gray-200 whitespace-nowrap">S.N.</th>
-                                <th className="p-2 border-b border-gray-200 whitespace-nowrap">Barcode</th>
                                 <th className="p-2 border-b border-gray-200 whitespace-nowrap">Product Name</th>
                                 <th className="p-2 border-b border-gray-200 whitespace-nowrap">Rate</th>
                                 <th className="p-2 border-b border-gray-200 whitespace-nowrap">Quantity</th>
@@ -329,7 +329,6 @@ const GenerateReceipt = () => {
                             {receiptData.map((value, index) => (
                                 <tr key={index}>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{index + 1}</td>
-                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].barcode}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].name}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].rate}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
