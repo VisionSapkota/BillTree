@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint } from "@fortawesome/free-solid-svg-icons";
+import Load from "@/components/Load"
 
 const GenerateReceipt = () => {
     const [barcodeNum, setBarcodeNum] = useState("")
@@ -20,6 +21,7 @@ const GenerateReceipt = () => {
     const [final, setFinal] = useState(0)
     const [discount, setDiscount] = useState(0)
     const [grandTotal, setGrandTotal] = useState(0)
+    const [saveLoader, setSaveLoader] = useState(false)
     const [defaultData, setDefaultData] = useState({
         store_name: "BillTree",
         store_address: "Not Specified",
@@ -94,14 +96,16 @@ const GenerateReceipt = () => {
     // Submit your Receipt
     const submitReceipt = async (e, isPrint) => {
         e.preventDefault();
+        setSaveLoader(true)
 
-        if (!receiptData) {
-            alert("Empty receipts cannot be saved.");
+        if (receiptData.length === 0) {
+            alert("Empty receipts cannot be submitted");
             return;
         }
 
         const { data: { user } } = await supabase.auth.getUser()
         const { data, error } = await supabase.from("receipts").select("details").eq("id", user.id)
+
         if (error) {
             alert(error.message);
             return;
@@ -140,20 +144,23 @@ const GenerateReceipt = () => {
         await quantityChanger(user.id, receiptData)
         setReceiptData([])
         setDiscount(0)
+        setSaveLoader(false)
     }
 
     // Change Quantity in product list
     const quantityChanger = async (id, receiptData) => {
         const { data: [{ productDetails }] } = await supabase.from("productList").select("productDetails").eq('id', id)
-        console.log("receiptData", receiptData)
+
         receiptData.map((value) => {
             productDetails.map((data) => {
-                if (value[0].barcode == data.barcode) {
-                    value[0].stock -= data.quantity
-                    console.log(value[0].stock)
+                if (value?.[0]?.barcode === data?.[0]?.barcode) {
+                    data[0].stock -= value[0].quantity
                 }
             })
         })
+
+        const { error } = await supabase.from("productList").update({productDetails}).eq("id", id)
+        if (error) alert(error.message);
     }
 
     // Delete a specific product from receipt
@@ -363,10 +370,9 @@ const GenerateReceipt = () => {
 
                 <div className="flex items-center justify-end mt-10 gap-5">
                     <button type="submit" onClick={(e) => submitReceipt(e, false)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faFloppyDisk} /> Save</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faFloppyDisk} /> {saveLoader ? <Load /> : "Save"}</button>
                     <button type="submit" onClick={(e) => submitReceipt(e, true)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faPrint} /> Save
-                        & Print</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faPrint} /> {saveLoader ? <Load /> : "Save & Print"}</button>
                 </div>
             </div>
         </>

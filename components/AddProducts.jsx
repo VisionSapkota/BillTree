@@ -39,9 +39,9 @@ const AddProducts = () => {
         const currentProductData = [{
             productName: productName,
             barcode: barcodeNum,
-            cp: CP,
-            mp: MP,
-            stock: stock
+            cp: Number(CP),
+            mp: Number(MP),
+            stock: Number(stock)
         }]
 
         let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
