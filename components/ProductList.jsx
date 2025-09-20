@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
@@ -94,7 +94,7 @@ const ProductList = () => {
             </table>
 
             <div className="mt-6">
-                <Link href="/barcodes" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer">View All Barcodes</Link>
+                <Link href="/barcodes" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faEye} /> View Barcodes</Link>
             </div>
         </>
     )

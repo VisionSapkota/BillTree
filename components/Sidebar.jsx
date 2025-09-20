@@ -31,7 +31,7 @@ const Sidebar = () => {
                 <div className="mt-3 w-full h-full flex flex-col text-lg pl-3 justify-evenly">
                     <SidebarItem href="/dashboard" icon={faHouse} label="Home" />
                     <SidebarItem href="/new" icon={faPlus} label="New" />
-                    <SidebarItem href="/orders" icon={faBoxOpen} label="Receipts" />
+                    <SidebarItem href="/receipts" icon={faBoxOpen} label="Receipts" />
                     <SidebarItem href="/stock" icon={faCubes} label="In Stock" />
                     <SidebarItem href="/products" icon={faTableList} label="Products List" />
                     <SidebarItem href="/add" icon={faFolderPlus} label="Add Products" />

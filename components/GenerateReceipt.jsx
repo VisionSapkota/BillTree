@@ -3,10 +3,9 @@ import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint } from "@fortawesome/free-solid-svg-icons";
 
 const GenerateReceipt = () => {
-
     const [barcodeNum, setBarcodeNum] = useState("")
     const [productName, setProductName] = useState("")
     const [rate, setRate] = useState("")
@@ -251,7 +250,7 @@ const GenerateReceipt = () => {
                     }
                     <div className="self-end">
                         <button type="button" className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"
-                            onClick={() => setIsBarcode(!isBarcode)}>Change</button>
+                            onClick={() => setIsBarcode(!isBarcode)}><FontAwesomeIcon icon={faShuffle} /></button>
                     </div>
                 </div>
 
@@ -364,9 +363,9 @@ const GenerateReceipt = () => {
 
                 <div className="flex items-center justify-end mt-10 gap-5">
                     <button type="submit" onClick={(e) => submitReceipt(e, false)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Save</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faFloppyDisk} /> Save</button>
                     <button type="submit" onClick={(e) => submitReceipt(e, true)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Save
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faPrint} /> Save
                         & Print</button>
                 </div>
             </div>
