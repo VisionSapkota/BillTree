@@ -53,10 +53,21 @@ const Barcodes = () => {
             return;
         }
 
+        let numberCopies = prompt("Total no. of copies")
+
         const card = cardRef.current[index];
         if (!card) return;
 
-        const print = window.open('', '', 'width=800, height=600');
+        let copies = '';
+        for (let i = 1; i <= numberCopies; i++) {
+            copies += `
+                <div style="margin-bottom: 20px;">
+                    ${card.outerHTML}
+                </div>
+            `
+        }
+
+        const print = window.open('', '', 'width=1200, height=700');
         print.document.write(`
             <html>
                 <head>
@@ -65,6 +76,14 @@ const Barcodes = () => {
                         * {
                             font-family: Arial, sans-serif;
                         }
+                        
+                        body {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-evenly;
+                            row-gap: 10px;
+                            width: 100%;
+                        }
 
                         button {
                             display: none !important;
@@ -72,7 +91,7 @@ const Barcodes = () => {
                     </style>
                 </head>
                 <body>
-                    ${card.outerHTML}
+                    ${copies}
                 </body>
             </html>
         `)
@@ -83,7 +102,7 @@ const Barcodes = () => {
         print.onafterprint = () => print.close();
 
         setTimeout(() => {
-            if(!print.closed) print.close();
+            if (!print.closed) print.close();
         }, 100);
     }
 
@@ -106,7 +125,7 @@ const Barcodes = () => {
                         <div
                             className="w-full h-32 sm:h-36 md:h-40 bg-white border-2 border-black rounded-xl flex justify-center items-center mb-6"
                             aria-label="Barcode image placeholder">
-                            <svg ref={e => (canvasRef.current[index] = e)} width="200"  height="50" className="max-w-full max-h-full"></svg>
+                            <svg ref={e => (canvasRef.current[index] = e)} width="200" height="50" className="max-w-full max-h-full"></svg>
                         </div>
                         <button
                             onClick={() => printHandler(index)}
