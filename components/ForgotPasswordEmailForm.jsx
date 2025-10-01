@@ -5,19 +5,27 @@ import Load from "./Load"
 
 const ForgotPasswordEmailForm = () => {
     const [email, setEmail] = useState("")
-    const [message, setMessage] = useState("")
+    const [msg, setMsg] = useState("")
     const [isLoad, setIsLoad] = useState(false)
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        setIsLoad(true)
-        const baseURL = process.env.REACT_APP_BASE_URL;
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${baseURL}/reset/password`
-        })
+        setMsg("")
 
-        error ? setMessage(error.message) : setMessage("Please check your email for password reset link.")
-        setIsLoad(false)
+        try {
+            setIsLoad(true)
+            const baseURL = process.env.REACT_APP_BASE_URL;
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${baseURL}/reset/password`
+            })
+
+            error ? setMsg(error.message) : setMsg("Please check your email for password reset link.")
+        } catch (error) {
+            console.error(error)
+            setMsg("Unexpected Error Occur. Please try again.")
+        } finally {
+            setIsLoad(false)
+        }
     }
 
     return (
@@ -33,7 +41,7 @@ const ForgotPasswordEmailForm = () => {
                 className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5">
                 {isLoad ? <Load /> : "Send Password Reset Request"}
             </button>
-            {message && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{message}</p>}
+            {msg && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{msg}</p>}
         </form>
     )
 }

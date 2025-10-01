@@ -25,17 +25,24 @@ const ResetPassword = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        setIsLoad(true)
+        setError("")
+        try {
+            setIsLoad(true)
 
-        if (newPass === confirmPass) {
+            if (newPass !== confirmPass) {
+                setError("New password and confirm password do not match.")
+                return;
+            }
+            
             const { error } = await supabase.auth.updateUser({ password: newPass });
             error ? setError(error.message) : "Password Changed Successfully. Redirecting...";
             router.push("/login")
-            return;
+        } catch (error) {
+            console.error(error)
+            setError("Unexpected Error Occur. Please try again.")
+        } finally {
+            setIsLoad(false)
         }
-
-        setError("New password and confirm password do not match.")
-        setIsLoad(false)
     }
 
     return (
@@ -59,7 +66,7 @@ const ResetPassword = () => {
 
                     <button type="submit"
                         className="w-full bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        {isLoad ? <Load /> : "Reset Password" }
+                        {isLoad ? <Load /> : "Reset Password"}
                     </button>
                     {error && <p className="text-center text-red-600 text-base font-semibold mt-4">{error}</p>}
                 </form>

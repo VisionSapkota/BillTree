@@ -11,6 +11,7 @@ const AddProducts = () => {
     const [barcodeNum, setBarcodeNum] = useState("")
     const [barcodeload, setBarcodesetload] = useState(false)
     const [isLoad, setIsLoad] = useState(false)
+    const [msg, setMsg] = useState("")
 
     {/* Generate Barcode */ }
     const barcodeNumber = () => {
@@ -28,44 +29,50 @@ const AddProducts = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        setIsLoad(true)
+        setMsg("")
 
-        if (!barcodeNum) {
-            alert("Generate barcode.");
+        try {
+            setIsLoad(true)
+
+            if (!barcodeNum) {
+                setMsg("Generate barcode.");
+                return;
+            }
+
+            const currentProductData = [{
+                productName: productName,
+                barcode: barcodeNum,
+                cp: Number(CP),
+                mp: Number(MP),
+                stock: Number(stock)
+            }]
+
+            let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
+            const { data } = await supabase.from("productList").select("productDetails").eq("id", id)
+
+            const productData = [
+                ...(data?.[0]?.productDetails || []),
+                currentProductData,
+            ];
+
+            const { error } = await supabase.from("productList").upsert([{
+                id: id,
+                productDetails: productData
+            }], { onConflict: ['id'] })
+
+            if (error) setMsg(error.message)
+
+        } catch (error) {
+            console.error(error)
+            setMsg("Unexpected Error Occur. Please try again.")
+        } finally {
+            setProductName("")
+            setCP("")
+            setMP("")
+            setStock("")
+            setBarcodeNum("")
             setIsLoad(false)
-            return;
         }
-
-        const currentProductData = [{
-            productName: productName,
-            barcode: barcodeNum,
-            cp: Number(CP),
-            mp: Number(MP),
-            stock: Number(stock)
-        }]
-
-        let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
-
-        const { data } = await supabase.from("productList").select("productDetails").eq("id", id)
-
-        const productData = [
-            ...(data?.[0]?.productDetails || []),
-            currentProductData,
-        ];
-
-        const { error } = await supabase.from("productList").upsert([{
-            id: id,
-            productDetails: productData
-        }], { onConflict: ['id'] })
-
-        if (error) alert(error.message)
-
-        setProductName("")
-        setCP("")
-        setMP("")
-        setStock("")
-        setBarcodeNum("")
-        setIsLoad(false)
     }
 
     return (
@@ -108,6 +115,9 @@ const AddProducts = () => {
 
             <div className="mt-6">
                 <button type="submit" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer">{isLoad ? <Load /> : "Add Product"}</button>
+            </div>
+            <div>
+                <p className="text-[#ff0000] font-bold text-center">{msg}</p>
             </div>
         </form>
     )

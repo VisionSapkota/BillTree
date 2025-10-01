@@ -15,14 +15,19 @@ const LoginForm = () => {
 
     const handler = async (e) => {
         e.preventDefault()
-        setIsLoad(true)
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        
-        if (error) { 
-            setError(error.message);
-            setIsLoad(false) 
-        } else {
-            router.push("/dashboard");
+        setError("")
+
+        try {
+            setIsLoad(true)
+            const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+            error ? setError(error.message) : router.push("/dashboard");
+
+        } catch (error) {
+            console.error(error)
+            setError("Unexpected Error Occur. Please try again.")
+        } finally {
+            setIsLoad(false)
         }
     }
 
@@ -36,7 +41,7 @@ const LoginForm = () => {
                 <div className="text-right mb-4">
                     <Link href="/reset"><span className="text-sm text-purple-600 hover:underline">Forgot your password?</span></Link>
                 </div>
-                <button className="w-full text-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
                     {isLoad ? <Load /> : "Login"}
                 </button>
             </form>

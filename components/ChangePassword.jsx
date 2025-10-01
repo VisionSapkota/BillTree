@@ -14,31 +14,35 @@ const ChangePassword = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault()
-        setIsLoad(true)
         setError("")
+        try {
+            setIsLoad(true)
 
-        const { data: { user } } = await supabase.auth.getUser()
-        const emaill = user.email;
-        const { error } = await supabase.auth.signInWithPassword({ email: emaill, password: currPass })
+            const { data: { user } } = await supabase.auth.getUser()
+            const emaill = user.email;
+            const { error } = await supabase.auth.signInWithPassword({ email: emaill, password: currPass })
 
-        if (error) {
-            setError("Current password is incorrect. Please try again.");
+            if (error) {
+                setError("Current password is incorrect. Please try again.");
+                return;
+            }
+
+            if (currPass === newPass) {
+                setError("New password cannot be the same as current password.");
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                setError("New password and confirm password do not match.");
+                return;
+            }
+            changePass()
+        } catch (error) {
+            console.error(error)
+            setError("Unexpected Error Occur. Please try again.")
+        } finally {
             setIsLoad(false)
-            return;
         }
-
-        if (currPass === newPass) {
-            setError("New password cannot be the same as current password.");
-            setIsLoad(false)
-            return;
-        }
-
-        if (newPass !== confirmPass) {
-            setError("New password and confirm password do not match.");
-            setIsLoad(false)
-            return;
-        }
-        changePass()
     }
 
     const changePass = async () => {

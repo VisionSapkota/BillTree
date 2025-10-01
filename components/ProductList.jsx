@@ -73,23 +73,30 @@ const ProductList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {finalData.map((value, index) => (
-                        <tr key={index}>
-                            <td className="p-2 border-b border-gray-200">{index + 1}</td>
-                            <td className="p-2 border-b border-gray-200">{value[0].barcode}</td>
-                            <td className="p-2 border-b border-gray-200">{value[0].productName}</td>
-                            <td className="p-2 border-b border-gray-200">{value[0].cp}</td>
-                            <td className="p-2 border-b border-gray-200">{value[0].mp}</td>
-                            <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
-                            <td className="p-2 border-b border-gray-200">
-                                <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
-                            </td>
-                            <td className="p-2 border-b border-gray-200 flex gap-2">
-                                <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
-                                <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
+                    {finalData.length > 0 ? (
+                        finalData.map((value, index) => (
+                            <tr key={index}>
+                                <td className="p-2 border-b border-gray-200">{index + 1}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].barcode}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].productName}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].cp}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].mp}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
+                                <td className="p-2 border-b border-gray-200">
+                                    <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
+                                </td>
+                                <td className="p-2 border-b border-gray-200 flex gap-2">
+                                    <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
+                                    <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
+                                </td>
+                            </tr>
+                        ))) : (
+                        <tr>
+                            <td colSpan={8} className="text-center font-bold text-2xl p-4 border-b border-gray-200">
+                                No records found.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
 

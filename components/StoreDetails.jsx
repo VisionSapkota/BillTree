@@ -12,6 +12,7 @@ const StoreDetails = () => {
     const [email, setEmail] = useState("")
     const [resetIsLoad, setResetIsLoad] = useState(false)
     const [saveIsLoad, setSaveIsLoad] = useState(false)
+    const [error, setError] = useState("")
 
     const resetHandler = () => {
         !saveIsLoad ? setResetIsLoad(true) : setResetIsLoad(false)
@@ -24,21 +25,29 @@ const StoreDetails = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        setSaveIsLoad(true)
+        setError("")
 
-        let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
-        const { error } = await supabase.from("Store Info").upsert([
-            {
-                id: id,
-                store_name: name,
-                store_address: address,
-                contact: contact,
-                email: email
-            }
-        ], { onConflict: ['id'] })
+        try {
+            setSaveIsLoad(true)
 
-        error ? alert(error.message) : resetHandler();
-        setSaveIsLoad(false)
+            let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
+            const { error } = await supabase.from("Store Info").upsert([
+                {
+                    id: id,
+                    store_name: name,
+                    store_address: address,
+                    contact: contact,
+                    email: email
+                }
+            ], { onConflict: ['id'] })
+
+            error ? setError(error.message) : resetHandler();
+        } catch (error) {
+            console.error(error);
+            setError("Unexpected Error Occur. Please try again.")
+        } finally {
+            setSaveIsLoad(false)
+        }
     }
 
     return (

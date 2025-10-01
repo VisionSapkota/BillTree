@@ -159,7 +159,7 @@ const GenerateReceipt = () => {
             })
         })
 
-        const { error } = await supabase.from("productList").update({productDetails}).eq("id", id)
+        const { error } = await supabase.from("productList").update({ productDetails }).eq("id", id)
         if (error) alert(error.message);
     }
 
@@ -185,11 +185,8 @@ const GenerateReceipt = () => {
             const { data: { user } } = await supabase.auth.getUser();
             const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
 
-            if (error) {
-                alert(error.message)
-            } else {
-                setFinalData(data.productDetails);
-            }
+
+            error ? alert(error.message) : setFinalData(data.productDetails);
         })()
     }, [])
 
@@ -198,15 +195,11 @@ const GenerateReceipt = () => {
 
             if (value[0].productName === productName && !isBarcode) {
                 setBarcodeNum(value[0].barcode)
-                setRate(value[0].mp)
-                setQuantity(1)
-                return;
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName)
-                setRate(value[0].mp)
-                setQuantity(1)
-                return;
             }
+            setRate(value[0].mp)
+            setQuantity(1)
 
         })
     }, [productName, barcodeNum])
@@ -214,27 +207,33 @@ const GenerateReceipt = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
-            alert("Please fill in the details.");
-            return;
+        try {
+
+            if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
+                alert("Please fill in the details.");
+                return;
+            }
+
+            const newEntry = [{
+                barcode: barcodeNum,
+                name: productName,
+                rate: Number(rate),
+                quantity: Number(quantity),
+                total: total
+            }];
+
+            const updatedData = [...receiptData, newEntry];
+
+            setReceiptData(updatedData);
+        } catch (error) {
+            console.error(error)
+            setError("Unexpected Error Occur. Please try again.")
+        } finally {
+            setBarcodeNum("");
+            setProductName("");
+            setRate("");
+            setQuantity("");
         }
-
-        const newEntry = [{
-            barcode: barcodeNum,
-            name: productName,
-            rate: Number(rate),
-            quantity: Number(quantity),
-            total: total
-        }];
-
-        const updatedData = [...receiptData, newEntry];
-
-        setReceiptData(updatedData);
-
-        setBarcodeNum("");
-        setProductName("");
-        setRate("");
-        setQuantity("");
     };
 
     return (

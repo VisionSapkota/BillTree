@@ -195,23 +195,31 @@ const ReceiptTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {finalData.map((value, index) => (
-                        <tr key={index}>
-                            <td className="p-2 border-b border-gray-200">{index + 1}</td>
-                            <td className="p-2 border-b border-gray-200">#{(value[value.length - 1][0].receiptNum).toString().padStart(3, "0")}</td>
-                            <td className="p-2 border-b border-gray-200">{value[value.length - 1][0].date}</td>
-                            <td className="p-2 border-b border-gray-200">{value.length - 1}</td>
-                            <td className="p-2 border-b border-gray-200">${value[value.length - 1][0].grandTotal}</td>
-                            <td className="p-2 border-b border-gray-200 flex gap-2">
-                                <button onClick={() => view(index)} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer">
-                                    <FontAwesomeIcon icon={faEye} />
-                                </button>
-                                <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"}`}>
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
+                    {finalData.length > 0 ? (
+                        finalData.map((value, index) => (
+                            <tr key={index}>
+                                <td className="p-2 border-b border-gray-200">{index + 1}</td>
+                                <td className="p-2 border-b border-gray-200">#{(value[value.length - 1][0].receiptNum).toString().padStart(3, "0")}</td>
+                                <td className="p-2 border-b border-gray-200">{value[value.length - 1][0].date}</td>
+                                <td className="p-2 border-b border-gray-200">{value.length - 1}</td>
+                                <td className="p-2 border-b border-gray-200">${value[value.length - 1][0].grandTotal}</td>
+                                <td className="p-2 border-b border-gray-200 flex gap-2">
+                                    <button onClick={() => view(index)} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer">
+                                        <FontAwesomeIcon icon={faEye} />
+                                    </button>
+                                    <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"}`}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={6} className="text-center font-bold text-2xl p-4 border-b border-gray-200">
+                                No records found.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </>
