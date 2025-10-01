@@ -9,7 +9,7 @@ const page = () => {
       {/* Main Content */}
       <main className="flex-1 p-6 mt-4 md:ml-70 md:mt-0">
         <div>
-          <h1 className="text-3xl font-bold mb-4 text-black">Receipts</h1>
+          <h1 className="text-3xl font-bold mb-4 text-black print:hidden">Receipts</h1>
           <div className="bg-white p-6 rounded shadow max-w-6xl text-black overflow-x-auto">
             <ReceiptTable />
           </div>

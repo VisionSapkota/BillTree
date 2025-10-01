@@ -14,14 +14,14 @@ const Sidebar = () => {
             {/* Mobile Toggle Button */}
             <button
                 onClick={toggleSidebar}
-                className="md:hidden bg-[#111] w-full text-white p-3"
+                className="md:hidden print:hidden bg-[#111] w-full text-white p-3"
                 aria-label="Toggle sidebar"
             >
                 <span><FontAwesomeIcon icon={faBars} /> Menu</span>
             </button>
 
             {/* Sidebar */}
-            <nav id="hideScrollbar" className={`bg-[#111] select-none text-white w-60 h-screen flex flex-col items-center
+            <nav id="hideScrollbar" className={`print:hidden bg-[#111] select-none text-white w-60 h-screen flex flex-col items-center
                 transform transition-transform duration-300 ease-in-out overflow-y-auto
                 fixed z-2
                 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
