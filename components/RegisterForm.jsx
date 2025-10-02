@@ -12,7 +12,7 @@ const RegisterForm = () => {
 
     const handler = async (e) => {
         e.preventDefault()
-        setError("")
+        setMessage("")
         try {
             setIsLoad(true)
             const { error } = await supabase.auth.signUp({ email, password })
@@ -20,7 +20,7 @@ const RegisterForm = () => {
             error ? setMessage(error.message) : setMessage("Registration successful! Please check your email for confirmation.");
         } catch(error) {
             console.error(error)
-            setError("Unexpected Error Occur. Please try again.")
+            setMessage("Unexpected Error Occur. Please try again.")
         } finally {
             setIsLoad(false)
         }
@@ -36,7 +36,7 @@ const RegisterForm = () => {
                 type="password"
                 placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full text-black mb-6 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300" />
-            <button className="w-full text-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+            <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
                 {isLoad ? <Load /> : "Register"}
             </button>
             {message && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{message}</p>}
