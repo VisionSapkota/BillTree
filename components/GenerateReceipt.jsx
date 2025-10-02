@@ -22,6 +22,8 @@ const GenerateReceipt = () => {
     const [discount, setDiscount] = useState(0)
     const [grandTotal, setGrandTotal] = useState(0)
     const [saveLoader, setSaveLoader] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [error, setError] = useState("")
     const [defaultData, setDefaultData] = useState({
         store_name: "BillTree",
         store_address: "Not Specified",
@@ -64,7 +66,7 @@ const GenerateReceipt = () => {
                 email: user?.email
             }));
 
-            error ? alert(error.message) : setData(data[0]);
+            error ? setError(error.message) : setData(data[0]);
         })();
     }, [])
 
@@ -96,55 +98,62 @@ const GenerateReceipt = () => {
     // Submit your Receipt
     const submitReceipt = async (e, isPrint) => {
         e.preventDefault();
-        setSaveLoader(true)
+        setError("")
 
-        if (receiptData.length === 0) {
-            alert("Empty receipts cannot be submitted");
-            return;
-        }
+        try {
+            setSaveLoader(true)
 
-        const { data: { user } } = await supabase.auth.getUser()
-        const { data, error } = await supabase.from("receipts").select("details").eq("id", user.id)
+            if (receiptData.length === 0) {
+                setError("Empty receipts cannot be submitted");
+                return;
+            }
 
-        if (error) {
-            alert(error.message);
-            return;
-        }
+            const { data: { user } } = await supabase.auth.getUser()
+            const { data, error } = await supabase.from("receipts").select("details").eq("id", user.id)
 
-        let allData = [
-            ...(data?.[0]?.details || []),
-            [
-                ...receiptData,
+            if (error) {
+                setError(error.message);
+                return;
+            }
+
+            let allData = [
+                ...(data?.[0]?.details || []),
                 [
-                    {
-                        receiptNum: receiptNumber,
-                        date: date,
-                        final: final,
-                        discount: final - grandTotal,
-                        grandTotal: grandTotal
-                    }
+                    ...receiptData,
+                    [
+                        {
+                            receiptNum: receiptNumber,
+                            date: date,
+                            final: final,
+                            discount: final - grandTotal,
+                            grandTotal: grandTotal
+                        }
+                    ]
                 ]
             ]
-        ]
 
-        const { error: upsertError } = await supabase.from("receipts").upsert([
-            {
-                id: user.id,
-                details: allData
+            const { error: upsertError } = await supabase.from("receipts").upsert([
+                {
+                    id: user.id,
+                    details: allData
+                }
+            ], { onConflict: ['id'] })
+
+            if (upsertError) {
+                setError(upsertError.message)
+                return;
             }
-        ], { onConflict: ['id'] })
 
-        if (upsertError) {
-            alert(upsertError.message)
-            return;
+            if (isPrint) window.print();
+            await quantityChanger(user.id, receiptData);
+        } catch (error) {
+            console.error(error);
+            setError("Unexpected error occur. Please try again.");
+        } finally {
+            setReceiptData([]);
+            setDiscount(0);
+            setSaveLoader(false);
         }
-
-        if (isPrint) window.print();
-
-        await quantityChanger(user.id, receiptData)
-        setReceiptData([])
-        setDiscount(0)
-        setSaveLoader(false)
     }
 
     // Change Quantity in product list
@@ -160,7 +169,7 @@ const GenerateReceipt = () => {
         })
 
         const { error } = await supabase.from("productList").update({ productDetails }).eq("id", id)
-        if (error) alert(error.message);
+        if (error) setError(error.message);
     }
 
     // Delete a specific product from receipt
@@ -185,8 +194,7 @@ const GenerateReceipt = () => {
             const { data: { user } } = await supabase.auth.getUser();
             const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
 
-
-            error ? alert(error.message) : setFinalData(data.productDetails);
+            error ? setMsg(error.message) : setFinalData(data.productDetails);
         })()
     }, [])
 
@@ -206,13 +214,20 @@ const GenerateReceipt = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        setMsg("")
 
         try {
-
             if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
-                alert("Please fill in the details.");
+                setMsg("Please fill in the details.");
                 return;
             }
+
+            const { data: { user } } = await supabase.auth.getUser()
+            const { data, error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
+
+            if (error) throw new Error(error);
+
+            console.log(data)
 
             const newEntry = [{
                 barcode: barcodeNum,
@@ -283,6 +298,10 @@ const GenerateReceipt = () => {
                             maximumFractionDigits: 2
                         })}</p>
                     </div>
+                </div>
+
+                <div className="text-center text-[#ff0000] font-bold">
+                    <p>{msg}</p>
                 </div>
 
                 <datalist id="productDetails">
@@ -372,6 +391,10 @@ const GenerateReceipt = () => {
                         className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faFloppyDisk} /> {saveLoader ? <Load /> : "Save"}</button>
                     <button type="submit" onClick={(e) => submitReceipt(e, true)}
                         className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faPrint} /> {saveLoader ? <Load /> : "Save & Print"}</button>
+                </div>
+
+                <div className="text-center text-[#ff0000] font-bold">
+                    <p>{error}</p>
                 </div>
             </div>
         </>

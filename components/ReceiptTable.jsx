@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPrint, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import Load from "./Load";
+import { useRouter } from "next/navigation"
 import "@/styles/receiptPrinter.css";
 
 const ReceiptTable = () => {
@@ -15,18 +16,19 @@ const ReceiptTable = () => {
     const [user, setUser] = useState("")
     const [viewReceipt, setViewReceipt] = useState(false)
     const [viewReceiptLoad, setViewReceiptLoad] = useState(false)
+    const [error, setError] = useState("")
+    const router = useRouter();
 
     useEffect(() => {
         list()
     }, [])
 
-
     const list = async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) alert("User not Found.");
+        if (!user) router.push("/login");
 
         const { data, error } = await supabase.from("receipts").select("details").eq('id', user.id).single();
-        if (error) alert(error.message);
+        if (error) setError(error.message);
 
         setFinalData(data?.details || []);
     }
@@ -35,15 +37,12 @@ const ReceiptTable = () => {
         setIsDelete(true)
 
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError) {
-            alert("User Not Found.", userError);
-            return;
-        }
+        if (userError) router.push("/login")
 
         const { error: fetchError } = await supabase.from("receipts").select("details").eq("id", user.id)
 
         if (fetchError) {
-            alert(fetchError.message)
+            setError(fetchError.message)
             return;
         }
 
@@ -55,7 +54,7 @@ const ReceiptTable = () => {
             }
         ], { onConflict: ['id'] })
 
-        if (error) alert(error.message)
+        if (error) setError(error.message)
         list()
         setIsDelete(false)
     }
@@ -64,23 +63,19 @@ const ReceiptTable = () => {
         setViewReceiptLoad(true)
 
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError) {
-            setViewReceiptLoad(false)
-            alert("User Not Found", userError.message);
-            return;
-        }
+        if (userError) router.push("/login")
 
         const { data: [{ details }], error } = await supabase.from("receipts").select("details").eq("id", user.id);
         if (error) {
             setViewReceiptLoad(false)
-            alert(error);
+            setError(error);
             return;
         }
 
         const { data, error: storeError } = await supabase.from("Store Info").select("*").eq("id", user.id);
         if (storeError) {
             setViewReceiptLoad(false)
-            alert(storeError)
+            setError(storeError)
             return;
         }
 
@@ -215,8 +210,8 @@ const ReceiptTable = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6} className="text-center font-bold text-2xl p-4 border-b border-gray-200">
-                                No records found.
+                            <td colSpan={6} className="text-center text-[#ff0000] font-bold text-2xl p-4 border-b border-gray-200">
+                                {error}
                             </td>
                         </tr>
                     )}
