@@ -32,7 +32,7 @@ const Sidebar = () => {
                     <SidebarItem href="/dashboard" icon={faHouse} label="Home" />
                     <SidebarItem href="/new" icon={faPlus} label="New" />
                     <SidebarItem href="/receipts" icon={faBoxOpen} label="Receipts" />
-                    <SidebarItem href="/stock" icon={faCubes} label="In Stock" />
+                    <SidebarItem href="/nostock" icon={faCubes} label="Out of Stock" />
                     <SidebarItem href="/products" icon={faTableList} label="Products List" />
                     <SidebarItem href="/add" icon={faFolderPlus} label="Add Products" />
                     <SidebarItem href="/profile" icon={faCircleUser} label="Profile" />
