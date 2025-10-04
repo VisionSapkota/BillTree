@@ -251,6 +251,10 @@ const GenerateReceipt = () => {
         }
     };
 
+    useEffect(() => {
+        console.log(finalData);
+    }, [finalData])
+
     return (
         <>
             {/* Generate */}
@@ -306,7 +310,7 @@ const GenerateReceipt = () => {
 
                 <datalist id="productDetails">
                     {finalData.map((value, index) => (
-                        <option key={index} value={value[0].productName}></option>
+                        value[0].stock !== 0 && (<option key={index} value={value[0].productName}></option>)
                     ))}
                 </datalist>
             </form>
