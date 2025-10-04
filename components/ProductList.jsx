@@ -3,27 +3,29 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation"
 import Link from "next/link";
 
 const ProductList = () => {
     const [finalData, setFinalData] = useState([])
     const [isDelete, setIsDelete] = useState(false)
+    const [error, setError] = useState("")
+    const router = useRouter();
 
     useEffect(() => {
         list()
     }, [])
 
     const list = async () => {
+        setError("")
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError) {
-            alert("User Not Found.", userError);
-            return
+            setError("User Not Found.", userError);
+            router.push('/login')
         }
 
         const { data, error } = await supabase.from("productList").select("productDetails").eq("id", user.id)
-        if (error) {
-            alert(error.message)
-        }
+        if (error) setError(error.message)
 
         setFinalData(data?.[0]?.productDetails || [])
     }
@@ -33,14 +35,14 @@ const ProductList = () => {
 
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError) {
-            alert("User Not Found.", userError);
-            return
+            setError("User Not Found.", userError);
+            router.push("/login");
         }
 
         const { error: fetchError } = await supabase.from("productList").select("productDetails").eq("id", user.id)
 
         if (fetchError) {
-            alert(fetchError.message)
+            setError(fetchError.message)
             return;
         }
 
@@ -52,7 +54,7 @@ const ProductList = () => {
             }
         ], { onConflict: ['id'] })
 
-        if (error) alert(error.message)
+        if (error) setError(error.message)
         list()
         setIsDelete(false)
     }
@@ -93,7 +95,7 @@ const ProductList = () => {
                         ))) : (
                         <tr>
                             <td colSpan={8} className="text-center font-bold text-2xl p-4 border-b border-gray-200">
-                                No records found.
+                                {error ? error : "No records found."}
                             </td>
                         </tr>
                     )}

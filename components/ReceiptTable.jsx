@@ -211,7 +211,7 @@ const ReceiptTable = () => {
                     ) : (
                         <tr>
                             <td colSpan={6} className="text-center text-[#ff0000] font-bold text-2xl p-4 border-b border-gray-200">
-                                {error}
+                                {error ? error : "No records found."}
                             </td>
                         </tr>
                     )}

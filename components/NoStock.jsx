@@ -50,7 +50,7 @@ const NoStock = () => {
                     ))) : (
                         <tr>
                             <td colSpan={4} className="text-center text-[#ff0000] font-bold text-2xl p-4 border-b border-gray-200">
-                                {msg}
+                                {msg ? msg : "No records found."}
                             </td>
                         </tr>
                     )}
