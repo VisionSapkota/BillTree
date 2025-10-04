@@ -85,13 +85,13 @@ const AddProducts = () => {
 
             <div>
                 <label className="block font-medium text-gray-700">Rate(Cost Price)</label>
-                <input type="number" min="0" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={CP} onChange={(e) => setCP(e.target.value)}
+                <input type="number" min="1" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={CP} onChange={(e) => setCP(e.target.value)}
                     placeholder="Enter rate" required />
             </div>
 
             <div>
                 <label className="block font-medium text-gray-700">Rate(Marked Price)</label>
-                <input type="number" min="0" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={MP} onChange={(e) => setMP(e.target.value)}
+                <input type="number" min="1" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={MP} onChange={(e) => setMP(e.target.value)}
                     placeholder="Enter rate" required />
             </div>
 
