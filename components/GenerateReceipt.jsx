@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation"
 import Load from "@/components/Load"
 
 const GenerateReceipt = () => {
@@ -31,10 +32,14 @@ const GenerateReceipt = () => {
         email: ""
     })
 
+    const router = useRouter()
+
     // Receipt Number
     useEffect(() => {
         (async () => {
-            const { data: { user } } = await supabase.auth.getUser()
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
             const { data: [{ details }] } = await supabase.from("receipts").select("details").eq('id', user.id)
 
             const lastReceipt = details[details.length - 1];
@@ -60,6 +65,8 @@ const GenerateReceipt = () => {
 
         (async () => {
             const { data: { user } = {} } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
             const { data, error } = await supabase.from("Store Info").select("*").eq("id", user?.id);
             setDefaultData((dataa) => ({
                 ...dataa,
@@ -108,7 +115,9 @@ const GenerateReceipt = () => {
                 return;
             }
 
-            const { data: { user } } = await supabase.auth.getUser()
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
             const { data, error } = await supabase.from("receipts").select("details").eq("id", user.id)
 
             if (error) {
@@ -192,6 +201,8 @@ const GenerateReceipt = () => {
 
         (async () => {
             const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
             const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
 
             error ? setMsg(error.message) : setFinalData(data.productDetails);
@@ -203,12 +214,12 @@ const GenerateReceipt = () => {
 
             if (value[0].productName === productName && !isBarcode) {
                 setBarcodeNum(value[0].barcode)
+                setRate(value[0].mp)
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName)
+                setRate(value[0].mp)
             }
-            setRate(value[0].mp)
             setQuantity(1)
-
         })
     }, [productName, barcodeNum])
 
@@ -218,16 +229,36 @@ const GenerateReceipt = () => {
 
         try {
             if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
-                setMsg("Please fill in the details.");
+                setMsg("Please fill in the details.")
                 return;
             }
 
-            const { data: { user } } = await supabase.auth.getUser()
-            const { data, error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
 
-            if (error) throw new Error(error);
+            const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
+            if (error) {
+                setMsg(error)
+                return;
+            }
 
-            console.log(data)
+            const matchedProduct = productDetails.find(
+                value => value[0].barcode === barcodeNum && value[0].productName === productName
+            );
+
+            if (!matchedProduct) {
+                setMsg("Product barcode doesn't match.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else if (matchedProduct[0].stock === 0) {
+                setMsg("Product is out of stock.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else {
+                setMsg("");
+            }
 
             const newEntry = [{
                 barcode: barcodeNum,
@@ -242,7 +273,7 @@ const GenerateReceipt = () => {
             setReceiptData(updatedData);
         } catch (error) {
             console.error(error)
-            setError("Unexpected Error Occur. Please try again.")
+            setMsg("Unexpected Error Occur. Please try again.")
         } finally {
             setBarcodeNum("");
             setProductName("");
@@ -250,10 +281,6 @@ const GenerateReceipt = () => {
             setQuantity("");
         }
     };
-
-    useEffect(() => {
-        console.log(finalData);
-    }, [finalData])
 
     return (
         <>
