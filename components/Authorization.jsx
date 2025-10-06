@@ -20,7 +20,7 @@ const Authorization = () => {
 
     return (
         <>
-            {isLoading && <div className="absolute top-0 z-10 flex items-center justify-center bg-[#ffffff11] backdrop-blur-sm h-screen w-screen gap-5 flex-col">
+            {isLoading && <div className="fixed top-0 z-10 flex items-center justify-center bg-[#ffffff11] backdrop-blur-sm h-screen w-screen gap-5 flex-col">
                 <p className="text-xl font-bold">Authorizing...</p>
                 <div className={`h-50 w-50 border-20 border-black border-t-transparent rounded-full ${styles.animateLoad}`}></div>
             </div>}
