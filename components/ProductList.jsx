@@ -10,6 +10,14 @@ const ProductList = () => {
     const [finalData, setFinalData] = useState([])
     const [isDelete, setIsDelete] = useState(false)
     const [error, setError] = useState("")
+    const [msg, setMsg] = useState("")
+    const [edit, setEdit] = useState(false)
+    const [editBarcode, setEditBarcode] = useState("")
+    const [editName, setEditName] = useState("")
+    const [editCP, setEditCP] = useState()
+    const [editMP, setEditMP] = useState()
+    const [editStock, setEditStock] = useState()
+    const [idx, setIdx] = useState()
     const router = useRouter();
 
     useEffect(() => {
@@ -59,8 +67,106 @@ const ProductList = () => {
         setIsDelete(false)
     }
 
+    const editHandler = async (index) => {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) router.push("/login")
+
+        const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user.id)
+        if (error) alert(error.message)
+
+        let editDetails = productDetails?.[index]?.[0];
+
+        setEditBarcode(editDetails?.barcode);
+        setEditName(editDetails?.productName);
+        setEditCP(editDetails?.cp);
+        setEditMP(editDetails?.mp);
+        setEditStock(editDetails?.stock);
+        setEdit(true)
+        setIdx(index)
+    }
+
+    const submitHandler = async (e) => {
+        e.preventDefault()
+        try {
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            if (userError) router.push("/login");
+
+            const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user.id);
+            if (error) alert(error.message)
+
+            const updated = {
+                barcode: editBarcode,
+                cp: editCP,
+                mp: editMP,
+                productName: editName,
+                stock: editStock
+            }
+
+            productDetails[idx][0] = updated;
+            const { data, error: updateError } = await supabase.from("productList").update({ productDetails }).eq("id", user.id)
+            if (updateError) alert(updateError.message)
+        } catch (error) {
+            console.error(error)
+            setMsg("Unexpected error occur. Please try again.")
+        } finally {
+            list()
+            setEdit(false)
+        }
+    }
+
     return (
         <>
+            {edit && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+                    <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6">
+
+                        <div className="flex justify-between items-center border-b pb-3 mb-4">
+                            <h2 className="text-xl font-semibold text-gray-800">Edit Product</h2>
+                        </div>
+
+                        <form className="space-y-4" onSubmit={submitHandler}>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Barcode</label>
+                                    <input type="number" value={editBarcode} readOnly className="w-full p-2 border border-gray-400 rounded bg-gray-100 text-gray-500 cursor-not-allowed outline-none" placeholder="Enter barcode" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                    <input type="text" required value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="Enter name" />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">CP</label>
+                                    <input type="number" required min="0" value={editCP} onChange={(e) => setEditCP(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">MP</label>
+                                    <input type="number" required min="0" value={editMP} onChange={(e) => setEditMP(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                                    <input type="number" required min="0" value={editStock} onChange={(e) => setEditStock(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button type="reset" onClick={() => setEdit(false)} className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer">Cancel</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div className="text-center text-[#ff0000] font-bold">
+                        <p>{msg}</p>
+                    </div>
+                </div>
+            )}
+
             <table className="w-full text-left border border-gray-200 whitespace-nowrap">
                 <thead className="bg-gray-100">
                     <tr>
@@ -88,7 +194,7 @@ const ProductList = () => {
                                     <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>
                                 </td>
                                 <td className="p-2 border-b border-gray-200 flex gap-2">
-                                    <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm"><FontAwesomeIcon icon={faPen} /></button>
+                                    <button onClick={() => editHandler(index)} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
                                     <button onClick={() => deleteHandler(index)} className={`bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm ${isDelete ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 cursor-pointer"} `}><FontAwesomeIcon icon={faTrash} /></button>
                                 </td>
                             </tr>
