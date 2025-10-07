@@ -308,7 +308,7 @@ const GenerateReceipt = () => {
 
                 <div>
                     <label className="block font-medium text-gray-700">Rate</label>
-                    <input readOnly type="number" value={rate} min="1" onChange={(e) => setRate(e.target.value)} className="w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
+                    <input readOnly type="number" value={rate} min="1" onChange={(e) => setRate(e.target.value)} className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
                         placeholder="Enter Rate" />
                 </div>
 

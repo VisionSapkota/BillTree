@@ -1,8 +1,9 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faEnvelope, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation"
 import Load from "./Load"
 
 const StoreDetails = () => {
@@ -13,14 +14,26 @@ const StoreDetails = () => {
     const [resetIsLoad, setResetIsLoad] = useState(false)
     const [saveIsLoad, setSaveIsLoad] = useState(false)
     const [error, setError] = useState("")
+    const router = useRouter()
 
-    const resetHandler = () => {
-        !saveIsLoad ? setResetIsLoad(true) : setResetIsLoad(false)
-        setName("");
-        setAddress("");
-        setContact("");
-        setEmail("");
-        setResetIsLoad(false)
+    useEffect(() => {
+        dataSet()
+    }, [])
+
+    const dataSet = async () => {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) router.push("/login")
+
+        const { data, error } = await supabase.from("Store Info").select("*").eq("id", user.id).single()
+        if (error) {
+            setError(error.message)
+            return;
+        }
+
+        setName(data?.store_name)
+        setAddress(data?.store_address)
+        setContact(data?.contact)
+        setEmail(user?.email)
     }
 
     const submitHandler = async (e) => {
@@ -36,12 +49,11 @@ const StoreDetails = () => {
                     id: id,
                     store_name: name,
                     store_address: address,
-                    contact: contact,
-                    email: email
+                    contact: contact
                 }
             ], { onConflict: ['id'] })
 
-            error ? setError(error.message) : resetHandler();
+            error ? setError(error.message) : dataSet();
         } catch (error) {
             console.error(error);
             setError("Unexpected Error Occur. Please try again.")
@@ -69,11 +81,11 @@ const StoreDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faEnvelope} /> Email</label>
-                <input type="email" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+                <input type="email" readOnly className="w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none cursor-not-allowed" value={email} />
             </div>
 
             <div className="flex justify-end gap-4">
-                <button type="reset" className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer" onClick={resetHandler} >{resetIsLoad ? <Load /> : "Cancel"}</button>
+                <button type="reset" className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer" onClick={dataSet} >{resetIsLoad ? <Load /> : "Cancel"}</button>
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">{saveIsLoad ? <Load /> : "Save Changes"}</button>
             </div>
             {error && <p className="text-center text-red-600 text-base font-semibold mt-4">{error}</p>}
