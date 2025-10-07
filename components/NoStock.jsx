@@ -15,7 +15,16 @@ const NoStock = () => {
                 if (userError) router.push("/login")
 
                 const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
-                if (error) throw new Error(error)
+
+                if (error && productDetails) {
+                    setMsg(error.message)
+                    return;
+                }
+
+                if (!productDetails) {
+                    setMsg("No records found.");
+                    return;
+                }
 
                 let zeroStock = productDetails.filter(val => val[0].stock === 0)
 
