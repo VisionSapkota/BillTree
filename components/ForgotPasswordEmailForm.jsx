@@ -14,7 +14,7 @@ const ForgotPasswordEmailForm = () => {
 
         try {
             setIsLoad(true)
-            const baseURL = process.env.REACT_APP_BASE_URL;
+            const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${baseURL}/reset/password`
             })

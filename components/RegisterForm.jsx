@@ -1,6 +1,5 @@
 "use client"
 import { useState } from "react"
-
 import { supabase } from "@/lib/supabaseClient"
 import Load from "./Load"
 
@@ -15,7 +14,10 @@ const RegisterForm = () => {
         setMessage("")
         try {
             setIsLoad(true)
-            const { error } = await supabase.auth.signUp({ email, password })
+            let baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+            const { error } = await supabase.auth.signUp({ email, password, options: {
+                emailRedirectTo: `${baseURL}/register/details`
+            } })
 
             error ? setMessage(error.message) : setMessage("Registration successful! Please check your email for confirmation.");
         } catch(error) {

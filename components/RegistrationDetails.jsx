@@ -3,50 +3,57 @@ import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faEnvelope, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
 import Load from "./Load"
 
-const StoreDetails = () => {
+const RegistrationDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
-    const [email, setEmail] = useState("")
-    const [resetIsLoad, setResetIsLoad] = useState(false)
-    const [saveIsLoad, setSaveIsLoad] = useState(false)
-    const [error, setError] = useState("")
-
-    const resetHandler = () => {
-        !saveIsLoad ? setResetIsLoad(true) : setResetIsLoad(false)
-        setName("");
-        setAddress("");
-        setContact("");
-        setEmail("");
-        setResetIsLoad(false)
-    }
+    const [message, setMessage] = useState("")
+    const [isLoad, setIsLoad] = useState(false)
+    const [userDetails, setUserDetails] = useState({})
+    const router = useRouter()
 
     const submitHandler = async (e) => {
-        e.preventDefault();
-        setError("")
+        e.preventDefault()
 
         try {
-            setSaveIsLoad(true)
+            setIsLoad(true)
+            let { data: { user } } = await supabase.auth.getUser();
 
-            let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
+            if (!user) {
+                const { data: sessionData, error:  sessionError} = await supabase.auth.exchangeCodeForSession(window.location.href);
+                user = sessionData?.user;
+
+                if (sessionError) router.push("/register")
+            }
+
             const { error } = await supabase.from("Store Info").upsert([
                 {
-                    id: id,
+                    id: user.id,
                     store_name: name,
                     store_address: address,
                     contact: contact,
-                    email: email
+                    email: user.email
                 }
             ], { onConflict: ['id'] })
 
-            error ? setError(error.message) : resetHandler();
+            if (error) {
+                setMessage(error.message)
+                return;
+            }
+            
+            console.log("Done")
+            router.push("/dashboard")
         } catch (error) {
-            console.error(error);
-            setError("Unexpected Error Occur. Please try again.")
+            console.error(error)
+            setMessage("Unexpected Error Occur. Please try again.")
         } finally {
-            setSaveIsLoad(false)
+            setName("")
+            setAddress("")
+            setContact("")
+            setIsLoad(false)
         }
     }
 
@@ -67,18 +74,13 @@ const StoreDetails = () => {
                 <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faEnvelope} /> Email</label>
-                <input type="email" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+            <div className="flex justify-end gap-4">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">{isLoad ? <Load /> : "Continue"}</button>
             </div>
 
-            <div className="flex justify-end gap-4">
-                <button type="reset" className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer" onClick={resetHandler} >{resetIsLoad ? <Load /> : "Cancel"}</button>
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">{saveIsLoad ? <Load /> : "Save Changes"}</button>
-            </div>
-            {error && <p className="text-center text-red-600 text-base font-semibold mt-4">{error}</p>}
+            {message && <p className="text-center text-red-600 text-base font-semibold mt-4">{message}</p>}
         </form>
     )
 }
 
-export default StoreDetails
+export default RegistrationDetails
