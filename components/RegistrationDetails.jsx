@@ -34,8 +34,7 @@ const RegistrationDetails = () => {
                     id: user.id,
                     store_name: name,
                     store_address: address,
-                    contact: contact,
-                    email: user.email
+                    contact: contact
                 }
             ], { onConflict: ['id'] })
 
