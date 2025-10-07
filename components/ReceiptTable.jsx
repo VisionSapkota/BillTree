@@ -27,8 +27,9 @@ const ReceiptTable = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) router.push("/login");
 
-        const { data, error } = await supabase.from("receipts").select("details").eq('id', user.id).single();
-        if (error) setError(error.message);
+        const { data } = await supabase.from("receipts").select("details").eq('id', user.id).single();
+        console.log(data)
+        if (!data || data.details.length === 0) setError("No records found.");
 
         setFinalData(data?.details || []);
     }
@@ -42,7 +43,7 @@ const ReceiptTable = () => {
         const { error: fetchError } = await supabase.from("receipts").select("details").eq("id", user.id)
 
         if (fetchError) {
-            setError(fetchError.message)
+            setError("2", fetchError.message)
             return;
         }
 
@@ -54,7 +55,7 @@ const ReceiptTable = () => {
             }
         ], { onConflict: ['id'] })
 
-        if (error) setError(error.message)
+        if (error) setError("3", error.message)
         list()
         setIsDelete(false)
     }
@@ -68,14 +69,14 @@ const ReceiptTable = () => {
         const { data: [{ details }], error } = await supabase.from("receipts").select("details").eq("id", user.id);
         if (error) {
             setViewReceiptLoad(false)
-            setError(error);
+            setError("4", error);
             return;
         }
 
         const { data, error: storeError } = await supabase.from("Store Info").select("*").eq("id", user.id);
         if (storeError) {
             setViewReceiptLoad(false)
-            setError(storeError)
+            setError("5", storeError)
             return;
         }
 
@@ -211,7 +212,7 @@ const ReceiptTable = () => {
                     ) : (
                         <tr>
                             <td colSpan={6} className="text-center text-[#ff0000] font-bold text-2xl p-4 border-b border-gray-200">
-                                {error ? error : "No records found."}
+                                {error}
                             </td>
                         </tr>
                     )}

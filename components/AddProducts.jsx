@@ -79,7 +79,7 @@ const AddProducts = () => {
         <form className="space-y-4" onSubmit={submitHandler}>
             <div>
                 <label className="block font-medium text-gray-700">Product Name</label>
-                <input type="text" className="w-full p-2 border border-gray-300 rounded outline-none" value={productName} onChange={(e) => setProductName(e.target.value)}
+                <input type="text" maxLength="50" className="w-full p-2 border border-gray-300 rounded outline-none" value={productName} onChange={(e) => setProductName(e.target.value)}
                     placeholder="Enter product name" required />
             </div>
 

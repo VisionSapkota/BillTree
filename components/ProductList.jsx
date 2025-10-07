@@ -133,7 +133,7 @@ const ProductList = () => {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                                    <input type="text" required value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="Enter name" />
+                                    <input type="text" maxLength="50" required value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="Enter name" />
                                 </div>
                             </div>
 
