@@ -25,14 +25,127 @@ const GenerateReceipt = () => {
     const [saveLoader, setSaveLoader] = useState(false)
     const [msg, setMsg] = useState("")
     const [error, setError] = useState("")
+    const [edit, setEdit] = useState(false)
+    const [editBarcode, setEditBarcode] = useState("")
+    const [editName, setEditName] = useState("")
+    const [editRate, setEditRate] = useState(0)
+    const [editQuantity, setEditQuantity] = useState(0)
+    const [editTotal, setEditTotal] = useState(0)
+    const [idx, setIdx] = useState()
+    const [isEditBarcode, setIsEditBarcode] = useState(true)
+    const [editError, setEditError] = useState("")
     const [defaultData, setDefaultData] = useState({
         store_name: "BillTree",
         store_address: "Not Specified",
         contact: "Not Specified",
         email: ""
     })
-
     const router = useRouter()
+
+
+    // Generate Receipt
+    useEffect(() => {
+        const r = Number(rate);
+        const q = Number(quantity);
+
+        setTotal(r * q);
+    }, [rate, quantity])
+
+    useEffect(() => {
+
+        (async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
+            const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
+
+            error ? setMsg(error.message) : setFinalData(data.productDetails);
+        })()
+    }, [])
+
+    useEffect(() => {
+        finalData.map((value) => {
+
+            if (value[0].productName === productName && !isBarcode) {
+                setBarcodeNum(value[0].barcode)
+                setRate(value[0].mp)
+                setQuantity(1)
+            } else if (value[0].barcode === barcodeNum && isBarcode) {
+                setProductName(value[0].productName)
+                setRate(value[0].mp)
+                setQuantity(1)
+            }
+
+            if (value[0].productName === editName && !isEditBarcode) {
+                setEditBarcode(value[0].barcode);
+                setEditRate(value[0].mp);
+                setEditQuantity(1)
+            } else if (value[0].barcode === editBarcode && isEditBarcode) {
+                setEditName(value[0].productName)
+                setEditRate(value[0].mp)
+                setEditQuantity(1)
+            }
+        })
+    }, [productName, barcodeNum, editBarcode, editName])
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        setMsg("")
+
+        try {
+            if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
+                setMsg("Please fill in the details.")
+                return;
+            }
+
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
+            const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
+            if (error) {
+                setMsg(error)
+                return;
+            }
+
+            const matchedProduct = productDetails.find(
+                value => value[0].barcode === barcodeNum && value[0].productName === productName
+            );
+
+            if (!matchedProduct) {
+                setMsg("Product barcode doesn't match.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else if (matchedProduct[0].stock === 0) {
+                setMsg("Product is out of stock.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else {
+                setMsg("");
+            }
+
+            const newEntry = [{
+                barcode: barcodeNum,
+                name: productName,
+                rate: Number(rate),
+                quantity: Number(quantity),
+                total: total
+            }];
+
+            const updatedData = [...receiptData, newEntry];
+
+            setReceiptData(updatedData);
+        } catch (error) {
+            console.error(error)
+            setMsg("Unexpected Error Occur. Please try again.")
+        } finally {
+            setBarcodeNum("");
+            setProductName("");
+            setRate("");
+            setQuantity("");
+        }
+    };
 
     // Receipt Number
     useEffect(() => {
@@ -189,98 +302,38 @@ const GenerateReceipt = () => {
         setReceiptData(updatedData);
     }
 
-    // Generate Receipt
     useEffect(() => {
-        const r = Number(rate);
-        const q = Number(quantity);
+        if (!editRate || !editQuantity) return;
+        let total = editRate * editQuantity
+        setEditTotal(total)
+    }, [editRate, editQuantity])
 
-        setTotal(r * q);
-    }, [rate, quantity])
-
-    useEffect(() => {
-
-        (async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) router.push("/login")
-
-            const { data, error } = await supabase.from("productList").select("productDetails").eq('id', user?.id).single()
-
-            error ? setMsg(error.message) : setFinalData(data.productDetails);
-        })()
-    }, [])
-
-    useEffect(() => {
-        finalData.map((value) => {
-
-            if (value[0].productName === productName && !isBarcode) {
-                setBarcodeNum(value[0].barcode)
-                setRate(value[0].mp)
-            } else if (value[0].barcode === barcodeNum && isBarcode) {
-                setProductName(value[0].productName)
-                setRate(value[0].mp)
-            }
-            setQuantity(1)
-        })
-    }, [productName, barcodeNum])
-
-    const submitHandler = async (e) => {
+    const editSubmit = (e) => {
         e.preventDefault();
-        setMsg("")
-
         try {
-            if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
-                setMsg("Please fill in the details.")
-                return;
-            }
+            const newData = [...receiptData];
+            const updatedData = [{
+                barcode: editBarcode,
+                name: editName,
+                quantity: Number(editQuantity),
+                rate: Number(editRate),
+                total: Number(editTotal)
+            }]
 
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) router.push("/login")
-
-            const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
-            if (error) {
-                setMsg(error)
-                return;
-            }
-
-            const matchedProduct = productDetails.find(
-                value => value[0].barcode === barcodeNum && value[0].productName === productName
-            );
-
-            if (!matchedProduct) {
-                setMsg("Product barcode doesn't match.");
-                setRate("")
-                setQuantity("")
-                return;
-            } else if (matchedProduct[0].stock === 0) {
-                setMsg("Product is out of stock.");
-                setRate("")
-                setQuantity("")
-                return;
-            } else {
-                setMsg("");
-            }
-
-            const newEntry = [{
-                barcode: barcodeNum,
-                name: productName,
-                rate: Number(rate),
-                quantity: Number(quantity),
-                total: total
-            }];
-
-            const updatedData = [...receiptData, newEntry];
-
-            setReceiptData(updatedData);
+            newData[idx] = updatedData
+            setReceiptData(newData)
         } catch (error) {
-            console.error(error)
-            setMsg("Unexpected Error Occur. Please try again.")
+            console.error(error);
+            setEditError("Unexpected error occur. Please try again.")
         } finally {
-            setBarcodeNum("");
-            setProductName("");
-            setRate("");
-            setQuantity("");
+            setEditBarcode("")
+            setEditName("")
+            setEditRate(0)
+            setEditQuantity(0)
+            setEditTotal(0)
+            setEdit(false)
         }
-    };
+    }
 
     return (
         <>
@@ -342,6 +395,64 @@ const GenerateReceipt = () => {
                 </datalist>
             </form>
 
+            {/* Edit Receipt */}
+            {edit && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+                    <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6">
+
+                        <div className="flex justify-between items-center border-b pb-3 mb-4">
+                            <h2 className="text-xl font-semibold text-gray-800">Edit</h2>
+                        </div>
+
+                        <form className="space-y-4" onSubmit={editSubmit}>
+                            <div className="grid grid-cols-2 gap-4">
+                                {isEditBarcode ? (
+                                    <div>
+                                        <label className="block w-full text-sm font-medium text-gray-700 mb-1">Barcode</label>
+                                        <input type="number" value={editBarcode} required onChange={(e) => setEditBarcode(e.target.value)} className="w-full p-2 border border-gray-400 rounded outline-none" placeholder="Enter barcode" />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <label className="block w-full text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                        <input type="text" list="productDetails" maxLength="50" required value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="Enter name" />
+                                    </div>
+                                )}
+                                <div className="self-end">
+                                    <button type="button" className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"
+                                        onClick={() => setIsEditBarcode(!isEditBarcode)}><FontAwesomeIcon icon={faShuffle} /></button>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate</label>
+                                    <input type="number" required min="0" value={editRate} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                    <input type="number" required min="0" value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Total</label>
+                                    <input type="number" required value={editTotal} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
+                                </div>
+                            </div>
+
+                            <div className="text-center text-[#ff0000] my-3 font-bold">
+                                <p>{editError}</p>
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button type="reset" onClick={() => setEdit(false)} className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer">Cancel</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
             {/* Receipt */}
             <div id="print-receipt" className="bg-white p-6 rounded shadow max-w-2xl mt-10 text-black">
                 <header className="text-center p-4 mb-8 border-b border-gray-300">
@@ -389,7 +500,7 @@ const GenerateReceipt = () => {
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
-                                        <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
+                                        <button type="button" onClick={() => { setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
                                         <button type='button' onClick={() => deleteHandler(index)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
                                     </td>
                                 </tr>
