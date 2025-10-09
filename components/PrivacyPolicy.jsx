@@ -18,7 +18,7 @@ const PrivacyPolicy = () => {
             <main className="max-w-4xl mx-auto py-12 px-4">
             {data.map((value, index) => (
                     <section className="mb-10" key={index}>
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{index + 2}. {value?.[0]?.title}</h2>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{index + 1}. {value?.[0]?.title}</h2>
                     <p className="text-gray-700 leading-relaxed">{value?.[0]?.description}</p>
                 </section>))}
             </main>
