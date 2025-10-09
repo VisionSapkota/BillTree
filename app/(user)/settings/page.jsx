@@ -1,6 +1,7 @@
 import Sidebar from "@/components/Sidebar"
 import StoreDetails from "@/components/StoreDetails"
 import ChangePassword from "@/components/ChangePassword"
+import Legal from "@/components/Legal"
 import Logout from "@/components/Logout"
 
 const page = () => {
@@ -27,10 +28,7 @@ const page = () => {
 
           <section className="mb-10">
             <h2 className="text-xl font-semibold mb-4">Legal</h2>
-            <ul className="list-disc pl-6 space-y-2 text-gray-600">
-              <li><a href="" className="text-blue-600 hover:underline">Terms and Conditions</a></li>
-              <li><a href="" className="text-blue-600 hover:underline">Privacy Policy</a></li>
-            </ul>
+            <Legal />
           </section>
 
           <section className="mb-10">

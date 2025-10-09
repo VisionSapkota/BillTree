@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
+import Link from "next/link"
 import Load from "./Load"
 
 const RegisterForm = () => {
@@ -15,12 +16,14 @@ const RegisterForm = () => {
         try {
             setIsLoad(true)
             let baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-            const { error } = await supabase.auth.signUp({ email, password, options: {
-                emailRedirectTo: `${baseURL}/register/details`
-            } })
+            const { error } = await supabase.auth.signUp({
+                email, password, options: {
+                    emailRedirectTo: `${baseURL}/register/details`
+                }
+            })
 
             error ? setMessage(error.message) : setMessage("Registration successful! Please check your email for confirmation.");
-        } catch(error) {
+        } catch (error) {
             console.error(error)
             setMessage("Unexpected Error Occur. Please try again.")
         } finally {
@@ -37,7 +40,18 @@ const RegisterForm = () => {
             <input
                 type="password"
                 placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full text-black mb-6 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300" />
+                className="w-full text-black mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300" />
+            <div className="mb-4 text-sm text-gray-600">
+                By registering, you agree to our{' '}
+                <Link href="/terms-and-conditions" className="text-blue-600 hover:underline" target="_blank">
+                    Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy-policy" className="text-blue-600 hover:underline" target="_blank">
+                    Privacy Policy
+                </Link>.
+            </div>
+
             <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
                 {isLoad ? <Load /> : "Register"}
             </button>
