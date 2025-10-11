@@ -44,6 +44,7 @@ const GenerateReceipt = () => {
 
 
     // Generate Receipt
+    // Total Calculator
     useEffect(() => {
         const r = Number(rate);
         const q = Number(quantity);
@@ -123,6 +124,11 @@ const GenerateReceipt = () => {
                 return;
             } else {
                 setMsg("");
+            }
+
+            if (quantity > matchedProduct[0].stock) {
+                setMsg("Quantity exceeds available stock.");
+                return;
             }
 
             const newEntry = [{
@@ -308,9 +314,46 @@ const GenerateReceipt = () => {
         setEditTotal(total)
     }, [editRate, editQuantity])
 
-    const editSubmit = (e) => {
+    const editSubmit = async (e) => {
         e.preventDefault();
         try {
+            if (editBarcode === "" || editName === "" || editRate === "" || editQuantity === "") {
+                setEditError("Please fill in the details.")
+                return;
+            }
+
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) router.push("/login")
+
+            const { data: [{ productDetails }], error } = await supabase.from("productList").select("productDetails").eq("id", user?.id);
+            if (error) {
+                setEditError(error)
+                return;
+            }
+
+            const matchedProduct = productDetails.find(
+                value => value[0].barcode === editBarcode && value[0].productName === editName
+            );
+
+            if (!matchedProduct) {
+                setEditError("Product barcode doesn't match.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else if (matchedProduct[0].stock === 0) {
+                setEditError("Product is out of stock.");
+                setRate("")
+                setQuantity("")
+                return;
+            } else {
+                setEditError("");
+            }
+
+            if (editQuantity > matchedProduct[0].stock) {
+                setEditError("Quantity exceeds available stock.");
+                return;
+            }
+
             const newData = [...receiptData];
             const updatedData = [{
                 barcode: editBarcode,
@@ -322,16 +365,16 @@ const GenerateReceipt = () => {
 
             newData[idx] = updatedData
             setReceiptData(newData)
-        } catch (error) {
-            console.error(error);
-            setEditError("Unexpected error occur. Please try again.")
-        } finally {
+
             setEditBarcode("")
             setEditName("")
             setEditRate(0)
             setEditQuantity(0)
             setEditTotal(0)
             setEdit(false)
+        } catch (error) {
+            console.error(error);
+            setEditError("Unexpected error occur. Please try again.")
         }
     }
 

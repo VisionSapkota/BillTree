@@ -96,10 +96,10 @@ const ProductList = () => {
 
             const updated = {
                 barcode: editBarcode,
-                cp: editCP,
-                mp: editMP,
+                cp: Number(editCP),
+                mp: Number(editMP),
                 productName: editName,
-                stock: editStock
+                stock: Number(editStock)
             }
 
             productDetails[idx][0] = updated;
