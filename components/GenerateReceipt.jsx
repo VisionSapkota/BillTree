@@ -335,7 +335,7 @@ const GenerateReceipt = () => {
             }
 
             let isDuplicate = false;
-            receiptData.map((value) => {
+            receiptData.filter((_, i) => i !== idx).map((value) => {
                 if (value[0].barcode === editBarcode || value[0].name === editName) {
                     isDuplicate = true;
                 }
