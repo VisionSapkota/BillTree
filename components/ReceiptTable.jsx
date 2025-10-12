@@ -142,9 +142,9 @@ const ReceiptTable = () => {
                                         <tr key={index}>
                                             <td className="p-2 border-b border-gray-200">{index + 1}</td>
                                             <td className="p-2 border-b border-gray-200">{value?.[0]?.name}</td>
-                                            <td className="p-2 border-b border-gray-200">$9000</td>
-                                            <td className="p-2 border-b border-gray-200">2</td>
-                                            <td className="p-2 border-b border-gray-200">$18000</td>
+                                            <td className="p-2 border-b border-gray-200">${value?.[0]?.rate}</td>
+                                            <td className="p-2 border-b border-gray-200">{value?.[0]?.quantity}</td>
+                                            <td className="p-2 border-b border-gray-200">${value?.[0]?.total}</td>
                                         </tr>
                                     ))}
                                 </tbody>
