@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faEnvelope, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Load from "./Load"
 
@@ -12,7 +12,6 @@ const RegistrationDetails = () => {
     const [contact, setContact] = useState("")
     const [message, setMessage] = useState("")
     const [isLoad, setIsLoad] = useState(false)
-    const [userDetails, setUserDetails] = useState({})
     const router = useRouter()
 
     const submitHandler = async (e) => {
@@ -59,17 +58,17 @@ const RegistrationDetails = () => {
         <form className="flex flex-col gap-6" onSubmit={submitHandler}>
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faStore} /> Store Name</label>
-                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={name} onChange={(e) => setName(e.target.value)} placeholder="Store Name" />
+                <input type="text" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={name} onChange={(e) => setName(e.target.value)} placeholder="Store Name" />
             </div>
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faLocationDot} /> Address</label>
-                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Store Address" />
+                <input type="text" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Store Address" />
             </div>
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faPhone} /> Contact Number</label>
-                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
+                <input type="number" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
             </div>
 
             <div className="flex justify-end gap-4">
