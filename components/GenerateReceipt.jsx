@@ -98,6 +98,18 @@ const GenerateReceipt = () => {
                 setMsg("Please fill in the details.")
                 return;
             }
+            let isDuplicate = false;
+
+            receiptData.map((value) => {
+                if (value[0].barcode === barcodeNum || value[0].name === productName) {
+                    isDuplicate = true;
+                }
+            })
+
+            if (isDuplicate) {
+                setMsg("Product already added");
+                return;
+            }
 
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) router.push("/login")
@@ -377,6 +389,10 @@ const GenerateReceipt = () => {
             setEditError("Unexpected error occur. Please try again.")
         }
     }
+
+    useEffect(() => {
+        console.log(receiptData)
+    }, [receiptData])
 
     return (
         <>
