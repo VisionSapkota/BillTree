@@ -28,7 +28,6 @@ const ReceiptTable = () => {
         if (!user) router.push("/login");
 
         const { data } = await supabase.from("receipts").select("details").eq('id', user.id).single();
-        console.log(data)
         if (!data || data.details.length === 0) setError("No records found.");
 
         setFinalData(data?.details || []);

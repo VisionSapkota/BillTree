@@ -43,7 +43,6 @@ const RegistrationDetails = () => {
                 return;
             }
             
-            console.log("Done")
             router.push("/dashboard")
         } catch (error) {
             console.error(error)

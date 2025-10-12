@@ -28,9 +28,6 @@ const NoStock = () => {
 
                 let zeroStock = productDetails.filter(val => val[0].stock === 0)
 
-                console.log(productDetails)
-                console.log(zeroStock)
-
                 setFinalData(zeroStock)
             } catch (error) {
                 console.error(error);
