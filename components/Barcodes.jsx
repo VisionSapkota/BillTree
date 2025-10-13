@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 const Barcodes = () => {
     const canvasRef = useRef([])
     const cardRef = useRef([])
+    const printAllRef = useRef()
     const [productsData, setProductsData] = useState([])
     const [msg, setMsg] = useState("")
     const [copiesPage, setCopiesPage] = useState(false)
@@ -56,13 +57,12 @@ const Barcodes = () => {
         e.preventDefault();
         setCopiesPage(false);
 
+        let card = null;
         if (!idx && idx !== 0) {
-            window.print();
-            return;
+            card = printAllRef.current;
+        } else {
+            card = cardRef.current?.[idx];
         }
-
-        const card = cardRef.current[idx];
-        if (!card) return;
 
         let copy = "";
         for (let i = 1; i <= copies; i++) {
@@ -83,7 +83,7 @@ const Barcodes = () => {
                             font-family: Arial, sans-serif;
                         }
                         
-                        body {
+                        body, #print-cards {
                             display: flex;
                             flex-wrap: wrap;
                             justify-content: space-evenly;
@@ -107,6 +107,7 @@ const Barcodes = () => {
         print.print();
         print.onafterprint = () => print.close();
         setCopies(1)
+        setIdx(null)
 
         setTimeout(() => {
             if (!print.closed) print.close();
@@ -130,7 +131,10 @@ const Barcodes = () => {
 
                     <form className="space-y-4" onSubmit={printHandler}>
                         <div className="grid grid-cols-2 gap-4">
-                            <label className="block w-full text-sm font-medium text-gray-700 mb-1">Copies</label>
+                            <div className="flex flex-col">
+                                <label className="block w-full text-sm font-medium text-gray-700 mb-1">Copies</label>
+                                <p className="block w-full text-xs font-medium text-gray-700 mb-1">10/page (A4, default margin)</p>
+                            </div>
                             <input type="number" min="1" required value={copies} onChange={(e) => setCopies(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="No. of copies" />
                         </div>
 
@@ -146,7 +150,7 @@ const Barcodes = () => {
                     <div className="text-gray-500 text-sm">{productsData?.length || 0} item{productsData?.length !== 1 ? 's' : ''}</div>
                 </header>
 
-                <div id="print-cards" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6">
+                <div id="print-cards" ref={printAllRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6">
                     {productsData?.map((value, index) => (
                         <div id="card"
                             key={index} ref={el => cardRef.current[index] = el}
@@ -170,7 +174,7 @@ const Barcodes = () => {
                     ))}
                 </div>
 
-                <button onClick={() => printHandler()} type="button" className="h-15 w-15 bg-black text-white flex items-center justify-center rounded-full text-2xl cursor-pointer hover:bg-[#111111] transition-all duration-300 ease-in z-3 fixed right-5 bottom-5"><FontAwesomeIcon icon={faPrint} /></button>
+                <button onClick={printHandler} type="button" className="h-15 w-15 bg-black text-white flex items-center justify-center rounded-full text-2xl cursor-pointer hover:bg-[#111111] transition-all duration-300 ease-in z-3 fixed right-5 bottom-5"><FontAwesomeIcon icon={faPrint} /></button>
 
                 {msg && <p className="mt-4 text-red-500">{msg}</p>}
             </div>
