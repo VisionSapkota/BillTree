@@ -38,8 +38,8 @@ const ForgotPasswordEmailForm = () => {
             </div>
 
             <button type="submit"
-                className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5">
-                {isLoad ? <Load /> : "Send Password Reset Request"}
+                className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5 flex items-center justify-center gap-2">
+                <span>{isLoad ? <Load /> : "Send Password Reset Request"}</span>
             </button>
             {msg && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{msg}</p>}
         </form>

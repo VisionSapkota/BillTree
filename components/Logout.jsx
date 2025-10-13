@@ -22,9 +22,9 @@ const Logout = () => {
             router.push("/login");
         }
     }
-
+98
     return (
-        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"><FontAwesomeIcon icon={faRightFromBracket} /> {isloading ? <Load /> : " Log Out"}</button>
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faRightFromBracket} /> <span>{isloading ? <Load /> : "Log Out"}</span></button>
     )
 }
 

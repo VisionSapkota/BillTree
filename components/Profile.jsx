@@ -27,7 +27,7 @@ const Profile = () => {
             <StoreInfo label="Store Name" icon={faStore} info={data?.store_name || "BilTree"} />
             <StoreInfo label="Address" icon={faLocationDot} info={data?.store_address || "Not Specified"} />
             <StoreInfo label="Contact Number" icon={faPhone} info={data?.contact || "Not Specified"} />
-            <StoreInfo label="Email" icon={faEnvelope} info={email || "billtree082@gmail.com"} />
+            <StoreInfo label="Email" icon={faEnvelope} info={email || "billtree46@gmail.com"} />
             <div className="flex gap-4 mt-6">
                 <Link href="/settings">
                     <span className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"><FontAwesomeIcon icon={faPen} /> Edit Store Info</span>
