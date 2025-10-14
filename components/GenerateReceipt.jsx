@@ -3,9 +3,8 @@ import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
 import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
-import Load from "@/components/Load"
 
 const GenerateReceipt = () => {
     const [barcodeNum, setBarcodeNum] = useState("")
@@ -23,6 +22,7 @@ const GenerateReceipt = () => {
     const [discount, setDiscount] = useState(0)
     const [grandTotal, setGrandTotal] = useState(0)
     const [saveLoader, setSaveLoader] = useState(false)
+    const [addLoader, setAddLoader] = useState(false)
     const [msg, setMsg] = useState("")
     const [error, setError] = useState("")
     const [edit, setEdit] = useState(false)
@@ -91,6 +91,7 @@ const GenerateReceipt = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        setAddLoader(true)
         setMsg("")
 
         try {
@@ -162,6 +163,7 @@ const GenerateReceipt = () => {
             setProductName("");
             setRate("");
             setQuantity("");
+            setAddLoader(false)
         }
     };
 
@@ -440,8 +442,7 @@ const GenerateReceipt = () => {
 
                 <div className="flex items-center justify-between mt-10 flex-wrap gap-y-5">
                     <button type="submit"
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Add
-                        Entry</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Add Entry {addLoader && <FontAwesomeIcon icon={faSpinner} spin />}</button>
 
                     <div className="flex justify-between flex-col bg-white border overflow-x-auto border-gray-200 rounded-lg px-5 py-2 shadow-sm">
                         <p className="text-green-600 text-4xl font-bold before:content-['$']">{total.toLocaleString('en-US', {
@@ -567,7 +568,7 @@ const GenerateReceipt = () => {
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
-                                        <button type="button" onClick={() => { setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
+                                        <button type="button" onClick={() => {setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
                                         <button type='button' onClick={() => deleteHandler(index)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
                                     </td>
                                 </tr>
@@ -597,9 +598,9 @@ const GenerateReceipt = () => {
 
                 <div className="flex items-center justify-end mt-10 gap-5">
                     <button type="submit" onClick={(e) => submitReceipt(e, false)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faFloppyDisk} /> {saveLoader ? <Load /> : "Save"}</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faFloppyDisk} /> Save <span>{saveLoader && <FontAwesomeIcon icon={faSpinner} spin /> }</span></button>
                     <button type="submit" onClick={(e) => submitReceipt(e, true)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer"><FontAwesomeIcon icon={faPrint} /> {saveLoader ? <Load /> : "Save & Print"}</button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faPrint} /> Save & Print <span>{saveLoader && <FontAwesomeIcon icon={faSpinner} spin />}</span></button>
                 </div>
 
                 <div className="text-center text-[#ff0000] font-bold">

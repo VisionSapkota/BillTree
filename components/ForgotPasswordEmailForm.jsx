@@ -1,7 +1,8 @@
 "use client"
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
-import Load from "./Load"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const ForgotPasswordEmailForm = () => {
     const [email, setEmail] = useState("")
@@ -39,7 +40,7 @@ const ForgotPasswordEmailForm = () => {
 
             <button type="submit"
                 className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5 flex items-center justify-center gap-2">
-                <span>{isLoad ? <Load /> : "Send Password Reset Request"}</span>
+                Send Password Reset Request <span>{isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</span>
             </button>
             {msg && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{msg}</p>}
         </form>

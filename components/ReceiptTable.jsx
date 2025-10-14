@@ -1,9 +1,8 @@
 "use client"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPrint, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPrint, faTrash, faXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
-import Load from "./Load";
 import { useRouter } from "next/navigation"
 import "@/styles/receiptPrinter.css";
 
@@ -90,7 +89,7 @@ const ReceiptTable = () => {
         <>
             {/* Receipt */}
             {viewReceipt &&
-                (viewReceiptLoad ? <Load /> :
+                (viewReceiptLoad ? <FontAwesomeIcon icon={faSpinner} spin /> :
                     <div
                         id="print-receipt"
                         className="print:w-full fixed top-0 left-0 bg-white z-50 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-full sm:max-w-2xl mx-auto mt-4 sm:mt-10 text-black overflow-auto max-h-[95vh]">

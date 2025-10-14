@@ -4,19 +4,21 @@ import { useRef, useEffect, useState } from "react"
 import JsBarcode from "jsbarcode";
 import { supabase } from "@/lib/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPrint, faXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/navigation"
 
 const Barcodes = () => {
-    const canvasRef = useRef([])
-    const cardRef = useRef([])
-    const printAllRef = useRef()
     const [productsData, setProductsData] = useState([])
     const [msg, setMsg] = useState("")
     const [copiesPage, setCopiesPage] = useState(false)
     const [copies, setCopies] = useState(1)
     const [idx, setIdx] = useState(null)
     const router = useRouter()
+    const [copiesLoader, setCopiesLoader] = useState(false)
+    const [printLoader, setPrintLoader] = useState(false)
+    const canvasRef = useRef([])
+    const cardRef = useRef([])
+    const printAllRef = useRef()
 
     useEffect(() => {
         (async () => {
@@ -55,6 +57,7 @@ const Barcodes = () => {
 
     const printHandler = (e) => {
         e.preventDefault();
+        setCopiesLoader(true);
         setCopiesPage(false);
 
         let card = null;
@@ -72,6 +75,8 @@ const Barcodes = () => {
                 </div>
             `
         }
+        setPrintLoader(false);
+        setCopiesLoader(false);
 
         const print = window.open('', '', 'width=1200, height=700');
         print.document.write(`
@@ -108,6 +113,7 @@ const Barcodes = () => {
         print.onafterprint = () => print.close();
         setCopies(1)
         setIdx(null)
+        setCopiesLoader(false);
 
         setTimeout(() => {
             if (!print.closed) print.close();
@@ -139,11 +145,12 @@ const Barcodes = () => {
                         </div>
 
                         <div className="flex justify-end gap-3 mt-6">
-                            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Proceed</button>
+                            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Proceed {copiesLoader && <FontAwesomeIcon icon={faSpinner} spin />}</button>
                         </div>
                     </form>
                 </div>
             </div>}
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-50 min-h-screen font-sans">
                 <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2 sm:gap-0">
                     <h1 className="text-3xl font-bold text-gray-900">Barcodes</h1>
@@ -165,10 +172,10 @@ const Barcodes = () => {
                                 <svg ref={e => (canvasRef.current[index] = e)} width="200" height="50" className="max-w-full max-h-full"></svg>
                             </div>
                             <button
-                                onClick={() => { setCopiesPage(true); setIdx(index) }}
+                                onClick={() => { setCopiesPage(true); setIdx(index); setPrintLoader(true); }}
                                 type="button"
                                 className="bg-indigo-600 cursor-pointer text-white font-semibold py-2 px-7 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
-                                Print
+                                Print {printLoader && <FontAwesomeIcon icon={faSpinner} spin />}
                             </button>
                         </div>
                     ))}

@@ -2,16 +2,15 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faEnvelope, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faEnvelope, faPhone, faStore, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
-import Load from "./Load"
 
 const StoreDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
     const [email, setEmail] = useState("")
-    const [resetIsLoad, setResetIsLoad] = useState(false)
+    const [resetLoad, setResetLoad] = useState(false)
     const [saveIsLoad, setSaveIsLoad] = useState(false)
     const [error, setError] = useState("")
     const router = useRouter()
@@ -21,6 +20,7 @@ const StoreDetails = () => {
     }, [])
 
     const dataSet = async () => {
+        setResetLoad(true)
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError) router.push("/login")
 
@@ -34,6 +34,7 @@ const StoreDetails = () => {
         setAddress(data?.store_address)
         setContact(data?.contact)
         setEmail(user?.email)
+        setResetLoad(false)
     }
 
     const submitHandler = async (e) => {
@@ -85,8 +86,8 @@ const StoreDetails = () => {
             </div>
 
             <div className="flex justify-end gap-4">
-                <button type="reset" className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer" onClick={dataSet} >{resetIsLoad ? <Load /> : "Cancel"}</button>
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">{saveIsLoad ? <Load /> : "Save Changes"}</button>
+                <button type="reset" className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer" onClick={dataSet} >Cancel {resetLoad && <FontAwesomeIcon icon={faSpinner} spin />}</button>
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">Save Changes {saveIsLoad && <FontAwesomeIcon icon={faSpinner} spin />}</button>
             </div>
             {error && <p className="text-center text-red-600 text-base font-semibold mt-4">{error}</p>}
         </form>

@@ -2,7 +2,8 @@
 import { supabase } from "@/lib/supabaseClient"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import Load from "./Load"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const ResetPassword = () => {
     const [allow, setAllow] = useState(false)
@@ -66,7 +67,7 @@ const ResetPassword = () => {
 
                     <button type="submit"
                         className="w-full bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center gap-2">
-                        <span>{isLoad ? <Load /> : "Reset Password"}</span>
+                        Reset Password <span>{isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</span>
                     </button>
                     {error && <p className="text-center text-red-600 text-base font-semibold mt-4">{error}</p>}
                 </form>

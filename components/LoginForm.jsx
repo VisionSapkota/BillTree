@@ -3,8 +3,9 @@ import NewUser from "./NewUser"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import Load from "./Load"
 import { supabase } from "@/lib/supabaseClient"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("")
@@ -41,8 +42,8 @@ const LoginForm = () => {
                 <div className="text-right mb-4">
                     <Link href="/reset"><span className="text-sm text-purple-600 hover:underline">Forgot your password?</span></Link>
                 </div>
-                <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
-                    {isLoad ? <Load /> : "Login"}
+                <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center gap-2">
+                    Login <span>{isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</span>
                 </button>
             </form>
             <p className="text-center text-sm text-gray-600 mt-4">

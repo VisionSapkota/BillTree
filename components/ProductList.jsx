@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faEye, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation"
 import Link from "next/link";
@@ -17,6 +17,7 @@ const ProductList = () => {
     const [editCP, setEditCP] = useState()
     const [editMP, setEditMP] = useState()
     const [editStock, setEditStock] = useState()
+    const [editLoader, setEditLoader] = useState(false)
     const [idx, setIdx] = useState()
     const router = useRouter();
 
@@ -87,6 +88,7 @@ const ProductList = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault()
+        setEditLoader(true)
         try {
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError) router.push("/login");
@@ -103,7 +105,7 @@ const ProductList = () => {
             }
 
             productDetails[idx][0] = updated;
-            const { data, error: updateError } = await supabase.from("productList").update({ productDetails }).eq("id", user.id)
+            const { error: updateError } = await supabase.from("productList").update({ productDetails }).eq("id", user.id)
             if (updateError) alert(updateError.message)
         } catch (error) {
             console.error(error)
@@ -111,6 +113,7 @@ const ProductList = () => {
         } finally {
             list()
             setEdit(false)
+            setEditLoader(false)
         }
     }
 
@@ -156,7 +159,7 @@ const ProductList = () => {
 
                             <div className="flex justify-end gap-3 mt-6">
                                 <button type="reset" onClick={() => setEdit(false)} className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer">Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes {editLoader && <FontAwesomeIcon icon={faSpinner} spin />}</button>
                             </div>
                         </form>
                     </div>

@@ -2,9 +2,8 @@
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faPhone, faStore } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faPhone, faStore, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
-import Load from "./Load"
 
 const RegistrationDetails = () => {
     const [name, setName] = useState("")
@@ -72,7 +71,7 @@ const RegistrationDetails = () => {
             </div>
 
             <div className="flex justify-end gap-4">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">{isLoad ? <Load /> : "Continue"}</button>
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">Continue {isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</button>
             </div>
 
             {message && <p className="text-center text-red-600 text-base font-semibold mt-4">{message}</p>}

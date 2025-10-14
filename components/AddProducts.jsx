@@ -1,7 +1,8 @@
 "use client"
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
-import Load from "./Load"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const AddProducts = () => {
     const [productName, setProductName] = useState("")
@@ -107,14 +108,14 @@ const AddProducts = () => {
                     <input id="barcodeInput" type="text" className="w-full p-2 border border-gray-300 rounded outline-none" readOnly required value={barcodeNum} onChange={(e) => setProductName(e.target.value)}
                         placeholder="Enter barcode number" />
                     <button type="button" onClick={barcodeNumber}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200 cursor-pointer">
-                        {barcodeload ? <Load /> : "Generate"}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200 cursor-pointer flex items-center justify-center gap-2">
+                        Generate <span>{barcodeload && <FontAwesomeIcon icon={faSpinner} spin />}</span>
                     </button>
                 </div>
             </div>
 
             <div className="mt-6">
-                <button type="submit" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer">{isLoad ? <Load /> : "Add Product"}</button>
+                <button type="submit" className="bg-[#111] text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer">Add Product {isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</button>
             </div>
             <div>
                 <p className="text-[#ff0000] font-bold text-center">{msg}</p>

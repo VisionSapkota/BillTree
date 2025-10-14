@@ -1,8 +1,9 @@
 "use client"
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link"
-import Load from "./Load"
 
 const RegisterForm = () => {
     const [email, setEmail] = useState("")
@@ -52,8 +53,8 @@ const RegisterForm = () => {
                 </Link>.
             </div>
 
-            <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300">
-                {isLoad ? <Load /> : "Register"}
+            <button className="w-full flex items-center justify-center cursor-pointer bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center gap-2">
+                Register <span>{isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</span>
             </button>
             {message && <p className={`text-center text-red-600 text-base font-semibold mt-4`}>{message}</p>}
         </form>
