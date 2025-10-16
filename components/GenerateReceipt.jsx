@@ -41,6 +41,7 @@ const GenerateReceipt = () => {
         email: ""
     })
     const router = useRouter()
+    const quantityRef = useRef(null)
 
 
     // Generate Receipt
@@ -97,6 +98,12 @@ const GenerateReceipt = () => {
         try {
             if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
                 setMsg("Please fill in the details.")
+                return;
+            }
+
+            if (quantity === 0) {
+                setMsg("Quantity cannot be zero.");
+                quantityRef.current.focus();
                 return;
             }
 
@@ -443,7 +450,7 @@ const GenerateReceipt = () => {
 
                 <div>
                     <label className="block font-medium text-gray-700">Quantity</label>
-                    <input type="number" value={quantity} min="0" onChange={(e) => setQuantity(e.target.value)} step="0.01" className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                    <input type="number" ref={quantityRef} value={quantity} min="0" onChange={(e) => setQuantity(e.target.value)} step="0.01" className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                         placeholder="Enter Quantity" />
                 </div>
 
