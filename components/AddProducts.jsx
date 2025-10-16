@@ -9,6 +9,7 @@ const AddProducts = () => {
     const [CP, setCP] = useState("")
     const [MP, setMP] = useState("")
     const [stock, setStock] = useState("")
+    const [discount, setDiscount] = useState(0)
     const [barcodeNum, setBarcodeNum] = useState("")
     const [barcodeload, setBarcodesetload] = useState(false)
     const [isLoad, setIsLoad] = useState(false)
@@ -40,12 +41,15 @@ const AddProducts = () => {
                 return;
             }
 
+            console.log(discount)
+
             const currentProductData = [{
                 productName: productName,
                 barcode: barcodeNum,
                 cp: Number(CP),
                 mp: Number(MP),
-                stock: Number(stock)
+                stock: Number(stock),
+                discount: Number(discount)
             }]
 
             let { data: { user: { id } = {} } = {} } = await supabase.auth.getUser();
@@ -100,6 +104,12 @@ const AddProducts = () => {
                 <label className="block font-medium text-gray-700">Stock</label>
                 <input type="number" min="0" step="1" className="w-full p-2 border border-gray-300 rounded outline-none" value={stock} onChange={(e) => setStock(e.target.value)}
                     placeholder="Enter stock amount" required />
+            </div>
+
+            <div>
+                <label className="block font-medium text-gray-700">Discount(%)</label>
+                <input type="number" min="0" max="100" step="0.01" className="w-full p-2 border border-gray-300 rounded outline-none" value={discount} onChange={(e) => setDiscount(e.target.value)}
+                    placeholder="Enter Offer" required />
             </div>
 
             <div>

@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
@@ -10,8 +10,10 @@ const GenerateReceipt = () => {
     const [barcodeNum, setBarcodeNum] = useState("")
     const [productName, setProductName] = useState("")
     const [rate, setRate] = useState("")
+    const [rateSP, setRateSP] = useState("")
+    const [spcDiscount, setSpcDiscount] = useState("")
     const [quantity, setQuantity] = useState("")
-    const [total, setTotal] = useState(0)
+    const [total, setTotal] = useState("")
     const [isBarcode, setIsBarcode] = useState(true)
     const [finalData, setFinalData] = useState([])
     const [receiptData, setReceiptData] = useState([])
@@ -29,6 +31,8 @@ const GenerateReceipt = () => {
     const [editBarcode, setEditBarcode] = useState("")
     const [editName, setEditName] = useState("")
     const [editRate, setEditRate] = useState(0)
+    const [editRateSP, setEditRateSP] = useState(0)
+    const [editSpcDiscount, setEditSpcDiscount] = useState(0)
     const [editQuantity, setEditQuantity] = useState(0)
     const [editTotal, setEditTotal] = useState(0)
     const [idx, setIdx] = useState()
@@ -41,17 +45,20 @@ const GenerateReceipt = () => {
         email: ""
     })
     const router = useRouter()
-    const quantityRef = useRef(null)
-
 
     // Generate Receipt
     // Total Calculator
     useEffect(() => {
-        const r = Number(rate);
+        const SP = rate - ((spcDiscount / 100) * rate);
+        setRateSP(SP);
+    }, [rate, spcDiscount])
+
+    useEffect(() => {
+        const r = Number(rateSP);
         const q = Number(quantity);
 
         setTotal(r * q);
-    }, [rate, quantity])
+    }, [rateSP, quantity])
 
     useEffect(() => {
 
@@ -71,24 +78,28 @@ const GenerateReceipt = () => {
             if (value[0].productName === productName && !isBarcode) {
                 setBarcodeNum(value[0].barcode)
                 setRate(value[0].mp)
+                setSpcDiscount(value[0].discount)
                 setQuantity(0)
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName)
                 setRate(value[0].mp)
+                setSpcDiscount(value[0].discount)
                 setQuantity(0)
             }
 
             if (value[0].productName === editName && !isEditBarcode) {
                 setEditBarcode(value[0].barcode);
                 setEditRate(value[0].mp);
+                setEditSpcDiscount(value[0].discount);
                 setEditQuantity(0)
             } else if (value[0].barcode === editBarcode && isEditBarcode) {
                 setEditName(value[0].productName)
                 setEditRate(value[0].mp)
+                setEditSpcDiscount(value[0].discount);
                 setEditQuantity(0)
             }
         })
-    }, [productName, barcodeNum, editBarcode, editName])
+    }, [productName, barcodeNum, editBarcode, editName, finalData])
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -103,7 +114,6 @@ const GenerateReceipt = () => {
 
             if (quantity === 0) {
                 setMsg("Quantity cannot be zero.");
-                quantityRef.current.focus();
                 return;
             }
 
@@ -155,8 +165,10 @@ const GenerateReceipt = () => {
                 barcode: barcodeNum,
                 name: productName,
                 rate: Number(rate),
+                rateSP: Number(rateSP),
+                prodDiscount: Number(spcDiscount),
                 quantity: Number(quantity),
-                total: total
+                total: Number(total)
             }];
 
             const updatedData = [...receiptData, newEntry];
@@ -273,9 +285,9 @@ const GenerateReceipt = () => {
                         {
                             receiptNum: receiptNumber,
                             date: date,
-                            final: final,
-                            discount: final - grandTotal,
-                            grandTotal: grandTotal
+                            final: Number(final),
+                            discount: Number(final - grandTotal),
+                            grandTotal: Number(grandTotal)
                         }
                     ]
                 ]
@@ -337,10 +349,14 @@ const GenerateReceipt = () => {
     }
 
     useEffect(() => {
-        if (!editRate || !editQuantity) return;
-        let total = editRate * editQuantity
-        setEditTotal(total)
-    }, [editRate, editQuantity])
+        const SP = editRate - ((editSpcDiscount / 100) * editRate);
+        setEditRateSP(SP.toFixed(2));
+    }, [editRate, editSpcDiscount])
+
+    useEffect(() => {
+        const total = editRateSP * editQuantity;
+        setEditTotal(total.toFixed(2));
+    }, [editQuantity, editRateSP])
 
     const editSubmit = async (e) => {
         e.preventDefault();
@@ -400,6 +416,8 @@ const GenerateReceipt = () => {
                 name: editName,
                 quantity: Number(editQuantity),
                 rate: Number(editRate),
+                rateSP: Number(editRateSP),
+                prodDiscount: Number(editSpcDiscount),
                 total: Number(editTotal)
             }]
 
@@ -443,14 +461,20 @@ const GenerateReceipt = () => {
                 </div>
 
                 <div>
-                    <label className="block font-medium text-gray-700">Rate</label>
-                    <input readOnly type="number" value={rate} min="1" onChange={(e) => setRate(e.target.value)} className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
-                        placeholder="Enter Rate" />
+                    <label className="block font-medium text-gray-700">Rate (MP)</label>
+                    <input readOnly type="number" value={rate} min="1" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
+                        placeholder="MP" />
+                </div>
+
+                <div>
+                    <label className="block font-medium text-gray-700">Rate (SP)</label>
+                    <input readOnly type="number" value={rateSP} min="1" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
+                        placeholder="SP" />
                 </div>
 
                 <div>
                     <label className="block font-medium text-gray-700">Quantity</label>
-                    <input type="number" ref={quantityRef} value={quantity} min="0" onChange={(e) => setQuantity(e.target.value)} step="0.01" className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                    <input type="number" value={quantity} min="0" onChange={(e) => setQuantity(e.target.value)} step="0.01" className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                         placeholder="Enter Quantity" />
                 </div>
 
@@ -507,8 +531,13 @@ const GenerateReceipt = () => {
 
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate (MP)</label>
                                     <input type="number" required min="0" value={editRate} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate (SP)</label>
+                                    <input type="number" required min="0" value={editRateSP} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
                                 </div>
 
                                 <div>
@@ -578,7 +607,7 @@ const GenerateReceipt = () => {
                                 <tr key={index}>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{index + 1}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].name}</td>
-                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].rate}</td>
+                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].prodDiscount ? <span><p className="line-through text-red-500">${value[0].rate}</p> ${value[0].rateSP}</span> : <span>${value[0].rateSP}</span>}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
@@ -594,7 +623,7 @@ const GenerateReceipt = () => {
                 <div className="mt-6 p-4 rounded bg-gray-50 shadow-sm w-full max-w-md ml-auto">
                     <div className="flex justify-between items-center mb-2">
                         <span className="font-semibold">Total:</span>
-                        <span>${final.toFixed(2)}</span>
+                        <span>${final}</span>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                         <label className="font-semibold">Discount(%):</label>
@@ -606,7 +635,7 @@ const GenerateReceipt = () => {
                     </div>
                     <div className="flex justify-between items-center border-t pt-2 mt-2">
                         <span className="font-bold text-lg">Grand Total:</span>
-                        <span className="text-lg font-bold">${grandTotal.toFixed(2)}</span>
+                        <span className="text-lg font-bold">${grandTotal}</span>
                     </div>
                 </div>
 

@@ -41,7 +41,7 @@ const ReceiptTable = () => {
         const { error: fetchError } = await supabase.from("receipts").select("details").eq("id", user.id)
 
         if (fetchError) {
-            setError("2", fetchError.message)
+            setError(fetchError.message)
             return;
         }
 
@@ -53,7 +53,7 @@ const ReceiptTable = () => {
             }
         ], { onConflict: ['id'] })
 
-        if (error) setError("3", error.message)
+        if (error) setError(error.message)
         list()
         setIsDelete(false)
     }
@@ -67,14 +67,14 @@ const ReceiptTable = () => {
         const { data: [{ details }], error } = await supabase.from("receipts").select("details").eq("id", user.id);
         if (error) {
             setViewReceiptLoad(false)
-            setError("4", error);
+            setError(error);
             return;
         }
 
         const { data, error: storeError } = await supabase.from("Store Info").select("*").eq("id", user.id);
         if (storeError) {
             setViewReceiptLoad(false)
-            setError("5", storeError)
+            setError(storeError)
             return;
         }
 
@@ -140,7 +140,7 @@ const ReceiptTable = () => {
                                         <tr key={index}>
                                             <td className="p-2 border-b border-gray-200">{index + 1}</td>
                                             <td className="p-2 border-b border-gray-200">{value?.[0]?.name}</td>
-                                            <td className="p-2 border-b border-gray-200">${value?.[0]?.rate}</td>
+                                            <td className="p-2 border-b border-gray-200">{value?.[0]?.prodDiscount ? <span><p className="line-through text-red-500">${value?.[0]?.rate}</p>${value?.[0]?.rateSP}</span> : <span>${value?.[0]?.rateSP}</span>}</td>
                                             <td className="p-2 border-b border-gray-200">{value?.[0]?.quantity}</td>
                                             <td className="p-2 border-b border-gray-200">${value?.[0]?.total}</td>
                                         </tr>
