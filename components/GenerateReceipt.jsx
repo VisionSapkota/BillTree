@@ -70,21 +70,21 @@ const GenerateReceipt = () => {
             if (value[0].productName === productName && !isBarcode) {
                 setBarcodeNum(value[0].barcode)
                 setRate(value[0].mp)
-                setQuantity(1)
+                setQuantity(0)
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName)
                 setRate(value[0].mp)
-                setQuantity(1)
+                setQuantity(0)
             }
 
             if (value[0].productName === editName && !isEditBarcode) {
                 setEditBarcode(value[0].barcode);
                 setEditRate(value[0].mp);
-                setEditQuantity(1)
+                setEditQuantity(0)
             } else if (value[0].barcode === editBarcode && isEditBarcode) {
                 setEditName(value[0].productName)
                 setEditRate(value[0].mp)
-                setEditQuantity(1)
+                setEditQuantity(0)
             }
         })
     }, [productName, barcodeNum, editBarcode, editName])
@@ -286,15 +286,22 @@ const GenerateReceipt = () => {
                 return;
             }
 
-            if (isPrint) window.print();
             await quantityChanger(user.id, receiptData);
+
+            if (isPrint) {
+                setTimeout(() => {
+                    window.print();
+                }, 1000)
+            }
         } catch (error) {
             console.error(error);
             setError("Unexpected error occur. Please try again.");
         } finally {
-            setReceiptData([]);
-            setDiscount(0);
-            setSaveLoader(false);
+            setTimeout(() => {
+                setReceiptData([]);
+                setDiscount(0);
+                setSaveLoader(false);
+            }, isPrint ? 2000 : 0)
         }
     }
 
@@ -568,7 +575,7 @@ const GenerateReceipt = () => {
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
-                                        <button type="button" onClick={() => {setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
+                                        <button type="button" onClick={() => { setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
                                         <button type='button' onClick={() => deleteHandler(index)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
                                     </td>
                                 </tr>
@@ -598,7 +605,7 @@ const GenerateReceipt = () => {
 
                 <div className="flex items-center justify-end mt-10 gap-5">
                     <button type="submit" onClick={(e) => submitReceipt(e, false)}
-                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faFloppyDisk} /> Save <span>{saveLoader && <FontAwesomeIcon icon={faSpinner} spin /> }</span></button>
+                        className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faFloppyDisk} /> Save <span>{saveLoader && <FontAwesomeIcon icon={faSpinner} spin />}</span></button>
                     <button type="submit" onClick={(e) => submitReceipt(e, true)}
                         className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer flex items-center justify-center gap-2"><FontAwesomeIcon icon={faPrint} /> Save & Print <span>{saveLoader && <FontAwesomeIcon icon={faSpinner} spin />}</span></button>
                 </div>
