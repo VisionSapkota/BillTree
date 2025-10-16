@@ -186,7 +186,7 @@ const ProductList = () => {
                         <th className="p-2 border-b border-gray-200">Product Name</th>
                         <th className="p-2 border-b border-gray-200">CP</th>
                         <th className="p-2 border-b border-gray-200">MP</th>
-                        <th className="p-2 border-b border-gray-200">Discount(%)</th>
+                        <th className="p-2 border-b border-gray-200">Discount</th>
                         <th className="p-2 border-b border-gray-200">SP</th>
                         <th className="p-2 border-b border-gray-200">Stock</th>
                         <th className="p-2 border-b border-gray-200">Status</th>
@@ -200,10 +200,10 @@ const ProductList = () => {
                                 <td className="p-2 border-b border-gray-200">{index + 1}</td>
                                 <td className="p-2 border-b border-gray-200">{value[0].barcode}</td>
                                 <td className="p-2 border-b border-gray-200">{value[0].productName}</td>
-                                <td className="p-2 border-b border-gray-200">{value[0].cp}</td>
-                                <td className="p-2 border-b border-gray-200">{value[0].mp}</td>
-                                <td className="p-2 border-b border-gray-200">{value[0].discount}</td>
-                                <td className="p-2 border-b border-gray-200">{(value[0].mp - ((value[0].discount / 100) * value[0].mp)).toFixed(2)}</td>
+                                <td className="p-2 border-b border-gray-200">Rs. {value[0].cp}</td>
+                                <td className="p-2 border-b border-gray-200">Rs. {value[0].mp}</td>
+                                <td className="p-2 border-b border-gray-200">{value[0].discount}%</td>
+                                <td className="p-2 border-b border-gray-200">Rs. {(value[0].mp - ((value[0].discount / 100) * value[0].mp)).toFixed(2)}</td>
                                 <td className="p-2 border-b border-gray-200">{value[0].stock}</td>
                                 <td className="p-2 border-b border-gray-200">
                                     <span className={`${value[0].stock > 0 ? "text-green-600" : "text-red-600"} font-medium`}>{value[0].stock > 0 ? "In Stock" : "Out of Stock"}</span>

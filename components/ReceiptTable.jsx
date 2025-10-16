@@ -140,9 +140,9 @@ const ReceiptTable = () => {
                                         <tr key={index}>
                                             <td className="p-2 border-b border-gray-200">{index + 1}</td>
                                             <td className="p-2 border-b border-gray-200">{value?.[0]?.name}</td>
-                                            <td className="p-2 border-b border-gray-200">{value?.[0]?.prodDiscount ? <span><p className="line-through text-red-500">${value?.[0]?.rate}</p>${value?.[0]?.rateSP}</span> : <span>${value?.[0]?.rateSP}</span>}</td>
+                                            <td className="p-2 border-b border-gray-200">{value?.[0]?.prodDiscount ? <span><p className="line-through text-red-500">Rs. {value?.[0]?.rate}</p>Rs. {value?.[0]?.rateSP}</span> : <span>Rs. {value?.[0]?.rateSP}</span>}</td>
                                             <td className="p-2 border-b border-gray-200">{value?.[0]?.quantity}</td>
-                                            <td className="p-2 border-b border-gray-200">${value?.[0]?.total}</td>
+                                            <td className="p-2 border-b border-gray-200">Rs. {value?.[0]?.total}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -152,7 +152,7 @@ const ReceiptTable = () => {
                         <div className="mt-4 sm:mt-6 p-3 sm:p-4 rounded bg-gray-50 shadow-sm w-full max-w-full sm:max-w-md ml-auto">
                             <div className="flex justify-between items-center mb-1">
                                 <span className="font-semibold text-sm sm:text-base">Total:</span>
-                                <span className="text-sm sm:text-base">${receiptData?.[receiptData.length - 1]?.[0]?.final.toFixed(2)}</span>
+                                <span className="text-sm sm:text-base">Rs. {receiptData?.[receiptData.length - 1]?.[0]?.final.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between items-center mb-1">
                                 <label className="font-semibold text-sm sm:text-base">Discount(%):</label>
@@ -162,7 +162,7 @@ const ReceiptTable = () => {
                             </div>
                             <div className="flex justify-between items-center border-t pt-1 mt-1">
                                 <span className="font-bold text-sm sm:text-lg">Grand Total:</span>
-                                <span className="text-sm sm:text-lg font-bold">${receiptData?.[receiptData.length - 1]?.[0]?.grandTotal.toFixed(2)}</span>
+                                <span className="text-sm sm:text-lg font-bold">Rs. {receiptData?.[receiptData.length - 1]?.[0]?.grandTotal.toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -196,7 +196,7 @@ const ReceiptTable = () => {
                                 <td className="p-2 border-b border-gray-200">#{(value[value.length - 1][0].receiptNum).toString().padStart(3, "0")}</td>
                                 <td className="p-2 border-b border-gray-200">{value[value.length - 1][0].date}</td>
                                 <td className="p-2 border-b border-gray-200">{value.length - 1}</td>
-                                <td className="p-2 border-b border-gray-200">${value[value.length - 1][0].grandTotal}</td>
+                                <td className="p-2 border-b border-gray-200">Rs. {value[value.length - 1][0].grandTotal}</td>
                                 <td className="p-2 border-b border-gray-200 flex gap-2">
                                     <button onClick={() => view(index)} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer">
                                         <FontAwesomeIcon icon={faEye} />

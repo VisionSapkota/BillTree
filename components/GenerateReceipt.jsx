@@ -250,8 +250,8 @@ const GenerateReceipt = () => {
 
         discountAmt = final * (discount / 100);
 
-        setFinal(final)
-        setGrandTotal(final - discountAmt)
+        setFinal(Number(final.toFixed(2)))
+        setGrandTotal(Number((final - discountAmt).toFixed(2)))
     }, [receiptData, discount])
 
     // Submit your Receipt
@@ -462,19 +462,19 @@ const GenerateReceipt = () => {
 
                 <div>
                     <label className="block font-medium text-gray-700">Rate (MP)</label>
-                    <input readOnly type="number" value={rate} min="1" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
+                    <input readOnly type="number" value={rate} min="0.01" step="0.01" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
                         placeholder="MP" />
                 </div>
 
                 <div>
                     <label className="block font-medium text-gray-700">Rate (SP)</label>
-                    <input readOnly type="number" value={rateSP} min="1" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
+                    <input readOnly type="number" value={rateSP} min="0.01" step="0.01" className="cursor-not-allowed w-full bg-[#f9fafb] p-2 text-[#6b7280] border border-gray-300 rounded outline-none"
                         placeholder="SP" />
                 </div>
 
                 <div>
                     <label className="block font-medium text-gray-700">Quantity</label>
-                    <input type="number" value={quantity} min="0" onChange={(e) => setQuantity(e.target.value)} step="0.01" className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                    <input type="number" value={quantity} min="0" step="0.01" onChange={(e) => setQuantity(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                         placeholder="Enter Quantity" />
                 </div>
 
@@ -483,7 +483,7 @@ const GenerateReceipt = () => {
                         className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Add Entry {addLoader && <FontAwesomeIcon icon={faSpinner} spin />}</button>
 
                     <div className="flex justify-between flex-col bg-white border overflow-x-auto border-gray-200 rounded-lg px-5 py-2 shadow-sm">
-                        <p className="text-green-600 text-4xl font-bold before:content-['$']">{total.toLocaleString('en-US', {
+                        <p className="text-green-600 text-4xl font-bold">Rs. {total.toLocaleString('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
                         })}</p>
@@ -532,17 +532,17 @@ const GenerateReceipt = () => {
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Rate (MP)</label>
-                                    <input type="number" required min="0" value={editRate} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
+                                    <input type="number" required min="0.01" step="0.01" value={editRate} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Rate (SP)</label>
-                                    <input type="number" required min="0" value={editRateSP} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
+                                    <input type="number" required min="0.01" step="0.01" value={editRateSP} readOnly className="w-full px-3 py-2 border border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-md" placeholder="0" />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                                    <input type="number" required min="0" value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
+                                    <input type="number" required min="0" step="0.01" value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} className="w-full px-3 py-2 border border-gray-400 outline-none rounded-md" placeholder="0" />
                                 </div>
 
                                 <div>
@@ -607,9 +607,9 @@ const GenerateReceipt = () => {
                                 <tr key={index}>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{index + 1}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].name}</td>
-                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].prodDiscount ? <span><p className="line-through text-red-500">${value[0].rate}</p> ${value[0].rateSP}</span> : <span>${value[0].rateSP}</span>}</td>
+                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].prodDiscount ? <span><p className="line-through text-red-500">Rs. {value[0].rate}</p> Rs. {value[0].rateSP}</span> : <span>Rs. {value[0].rateSP}</span>}</td>
                                     <td className="p-2 border-b border-gray-200 whitespace-nowrap">{value[0].quantity}</td>
-                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">${value[0].total}</td>
+                                    <td className="p-2 border-b border-gray-200 whitespace-nowrap">Rs. {value[0].total}</td>
                                     <td id="action" className="p-2 border-b border-gray-200 flex items-center justify-between gap-3">
                                         <button type="button" onClick={() => { setEdit(true); setIdx(index) }} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faPen} /></button>
                                         <button type='button' onClick={() => deleteHandler(index)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm cursor-pointer"><FontAwesomeIcon icon={faTrash} /></button>
@@ -623,7 +623,7 @@ const GenerateReceipt = () => {
                 <div className="mt-6 p-4 rounded bg-gray-50 shadow-sm w-full max-w-md ml-auto">
                     <div className="flex justify-between items-center mb-2">
                         <span className="font-semibold">Total:</span>
-                        <span>${final}</span>
+                        <span>Rs. {final}</span>
                     </div>
                     <div className="flex justify-between items-center mb-2">
                         <label className="font-semibold">Discount(%):</label>
@@ -635,7 +635,7 @@ const GenerateReceipt = () => {
                     </div>
                     <div className="flex justify-between items-center border-t pt-2 mt-2">
                         <span className="font-bold text-lg">Grand Total:</span>
-                        <span className="text-lg font-bold">${grandTotal}</span>
+                        <span className="text-lg font-bold">Rs. {grandTotal}</span>
                     </div>
                 </div>
 
