@@ -76,6 +76,7 @@ const AddProducts = () => {
             setMP("")
             setStock("")
             setBarcodeNum("")
+            setDiscount(0)
             setIsLoad(false)
         }
     }
