@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
