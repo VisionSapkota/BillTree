@@ -1,7 +1,7 @@
 "use client"
 import "@/styles/receiptPrinter.css"
 import { supabase } from '@/lib/supabaseClient'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faShuffle, faFloppyDisk, faPrint, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
@@ -23,6 +23,7 @@ const GenerateReceipt = () => {
     const [final, setFinal] = useState(0)
     const [discount, setDiscount] = useState(0)
     const [grandTotal, setGrandTotal] = useState(0)
+    const [stock, setStock] = useState(null)
     const [saveLoader, setSaveLoader] = useState(false)
     const [addLoader, setAddLoader] = useState(false)
     const [msg, setMsg] = useState("")
@@ -35,6 +36,7 @@ const GenerateReceipt = () => {
     const [editSpcDiscount, setEditSpcDiscount] = useState(0)
     const [editQuantity, setEditQuantity] = useState(0)
     const [editTotal, setEditTotal] = useState(0)
+    const [editStock, setEditStock] = useState(null)
     const [idx, setIdx] = useState()
     const [isEditBarcode, setIsEditBarcode] = useState(true)
     const [editError, setEditError] = useState("")
@@ -45,6 +47,9 @@ const GenerateReceipt = () => {
         email: ""
     })
     const router = useRouter()
+    const barcodeRef = useRef(null)
+    const nameRef = useRef(null)
+    const quantityRef = useRef(null)
 
     // Generate Receipt
     // Total Calculator
@@ -76,27 +81,31 @@ const GenerateReceipt = () => {
         finalData.map((value) => {
 
             if (value[0].productName === productName && !isBarcode) {
-                setBarcodeNum(value[0].barcode)
-                setRate(value[0].mp)
-                setSpcDiscount(value[0].discount)
-                setQuantity(0)
+                setBarcodeNum(value[0].barcode);
+                setRate(value[0].mp);
+                setSpcDiscount(value[0].discount);
+                setStock(value[0].stock);
+                setQuantity(0);
             } else if (value[0].barcode === barcodeNum && isBarcode) {
-                setProductName(value[0].productName)
-                setRate(value[0].mp)
-                setSpcDiscount(value[0].discount)
-                setQuantity(0)
+                setProductName(value[0].productName);
+                setRate(value[0].mp);
+                setSpcDiscount(value[0].discount);
+                setStock(value[0].stock);
+                setQuantity(0);
             }
 
             if (value[0].productName === editName && !isEditBarcode) {
                 setEditBarcode(value[0].barcode);
                 setEditRate(value[0].mp);
                 setEditSpcDiscount(value[0].discount);
-                setEditQuantity(0)
+                setEditStock(value[0].stock);
+                setEditQuantity(0);
             } else if (value[0].barcode === editBarcode && isEditBarcode) {
-                setEditName(value[0].productName)
-                setEditRate(value[0].mp)
+                setEditName(value[0].productName);
+                setEditRate(value[0].mp);
                 setEditSpcDiscount(value[0].discount);
-                setEditQuantity(0)
+                setEditStock(value[0].stock);
+                setEditQuantity(0);
             }
         })
     }, [productName, barcodeNum, editBarcode, editName, finalData])
@@ -107,13 +116,14 @@ const GenerateReceipt = () => {
         setMsg("")
 
         try {
-            if (barcodeNum === "" || productName === "" || rate === "" || quantity === "") {
-                setMsg("Please fill in the details.")
+            if (barcodeNum === "" || productName === "" || quantity === "") {
+                setMsg(`${barcodeNum === "" ? "Barcode Number" : productName === "" ? "Product Name" : "Quantity"} is empty.`);
                 return;
             }
 
             if (quantity === 0) {
                 setMsg("Quantity cannot be zero.");
+                quantityRef.current.focus();
                 return;
             }
 
@@ -126,6 +136,7 @@ const GenerateReceipt = () => {
 
             if (isDuplicate) {
                 setMsg("Product already added");
+                isBarcode ? barcodeRef.current.focus() : nameRef.current.focus();
                 return;
             }
 
@@ -157,7 +168,8 @@ const GenerateReceipt = () => {
             }
 
             if (quantity > matchedProduct[0].stock) {
-                setMsg("Quantity exceeds available stock.");
+                setMsg(`Quantity exceeds available stock. Available Stock = ${stock}`);
+                quantityRef.current.focus();
                 return;
             }
 
@@ -174,14 +186,18 @@ const GenerateReceipt = () => {
             const updatedData = [...receiptData, newEntry];
 
             setReceiptData(updatedData);
-        } catch (error) {
-            console.error(error)
-            setMsg("Unexpected Error Occur. Please try again.")
-        } finally {
             setBarcodeNum("");
             setProductName("");
             setRate("");
             setQuantity("");
+        } catch (error) {
+            console.error(error)
+            setMsg("Unexpected Error Occur. Please try again.")
+            setBarcodeNum("");
+            setProductName("");
+            setRate("");
+            setQuantity("");
+        } finally {
             setAddLoader(false)
         }
     };
@@ -406,7 +422,7 @@ const GenerateReceipt = () => {
             }
 
             if (editQuantity > matchedProduct[0].stock) {
-                setEditError("Quantity exceeds available stock.");
+                setEditError(`Quantity exceeds available stock. Available Stock = ${editStock}`);
                 return;
             }
 
@@ -444,13 +460,13 @@ const GenerateReceipt = () => {
                     {isBarcode ?
                         <div className="w-full">
                             <label className="block font-medium text-gray-700">Barcode Number</label>
-                            <input type="number" value={barcodeNum} onChange={(e) => setBarcodeNum(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                            <input type="number" ref={barcodeRef} value={barcodeNum} onChange={(e) => setBarcodeNum(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                                 placeholder="Enter barcode number" />
                         </div>
                         :
                         <div className="w-full">
                             <label className="block font-medium text-gray-700">Product Name</label>
-                            <input type="text" list="productDetails" value={productName} onChange={(e) => setProductName(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                            <input type="text" ref={nameRef} list="productDetails" value={productName} onChange={(e) => setProductName(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                                 placeholder="Enter product name" />
                         </div>
                     }
@@ -474,7 +490,7 @@ const GenerateReceipt = () => {
 
                 <div>
                     <label className="block font-medium text-gray-700">Quantity</label>
-                    <input type="number" value={quantity} min="0" step="0.01" onChange={(e) => setQuantity(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                    <input type="number" value={quantity} ref={quantityRef} min="0" step="0.01" onChange={(e) => setQuantity(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                         placeholder="Enter Quantity" />
                 </div>
 
