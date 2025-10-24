@@ -597,15 +597,15 @@ const GenerateReceipt = () => {
                         <table className="ml-4 border-collapse">
                             <tbody>
                                 <tr className="border border-black">
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[0]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[1]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[2]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[3]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[4]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[5]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[6]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[7]}</td>
-                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[8]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[0] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[1] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[2] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[3] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[4] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[5] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[6] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[7] || "#"}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[8] || "#"}</td>
                                 </tr>
                             </tbody>
                         </table>

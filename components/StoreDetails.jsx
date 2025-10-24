@@ -85,7 +85,7 @@ const StoreDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
-                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
+                <input type="number" maxLength={9} minLength={9} className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div>

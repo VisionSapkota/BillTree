@@ -75,7 +75,7 @@ const RegistrationDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
-                <input type="text" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
+                <input type="number" maxLength={9} minLength={9} required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div className="flex justify-end gap-4">
