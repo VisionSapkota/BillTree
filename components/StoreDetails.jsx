@@ -2,13 +2,14 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faEnvelope, faPhone, faStore, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faEnvelope, faPhone, faStore, faIdCard, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation"
 
 const StoreDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
+    const [PAN, setPAN] = useState("")
     const [email, setEmail] = useState("")
     const [resetLoad, setResetLoad] = useState(false)
     const [saveIsLoad, setSaveIsLoad] = useState(false)
@@ -33,6 +34,7 @@ const StoreDetails = () => {
         setName(data?.store_name)
         setAddress(data?.store_address)
         setContact(data?.contact)
+        setPAN(data?.PAN)
         setEmail(user?.email)
         setResetLoad(false)
     }
@@ -50,7 +52,8 @@ const StoreDetails = () => {
                     id: id,
                     store_name: name,
                     store_address: address,
-                    contact: contact
+                    contact: contact,
+                    PAN: PAN
                 }
             ], { onConflict: ['id'] })
 
@@ -78,6 +81,11 @@ const StoreDetails = () => {
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faPhone} /> Contact Number</label>
                 <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
+                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div>

@@ -2,13 +2,14 @@
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faPhone, faStore, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faPhone, faStore, faIdCard, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 
 const RegistrationDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
+    const [PAN, setPAN] = useState("")
     const [message, setMessage] = useState("")
     const [isLoad, setIsLoad] = useState(false)
     const router = useRouter()
@@ -32,7 +33,8 @@ const RegistrationDetails = () => {
                     id: user.id,
                     store_name: name,
                     store_address: address,
-                    contact: contact
+                    contact: contact,
+                    PAN: PAN
                 }
             ], { onConflict: ['id'] })
 
@@ -49,6 +51,7 @@ const RegistrationDetails = () => {
             setName("")
             setAddress("")
             setContact("")
+            setPAN("")
             setIsLoad(false)
         }
     }
@@ -68,6 +71,11 @@ const RegistrationDetails = () => {
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faPhone} /> Contact Number</label>
                 <input type="number" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
+                <input type="text" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div className="flex justify-end gap-4">

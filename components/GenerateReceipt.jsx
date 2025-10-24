@@ -591,6 +591,29 @@ const GenerateReceipt = () => {
                         <span className="no-underline after:content-['|'] after:mx-1">{data?.contact || defaultData.contact}</span>
                         <span className="no-underline">{data?.email || defaultData.email || "Not Specified"}</span>
                     </div>
+
+                    <div className="flex items-center justify-left mt-2 w-fit">
+                        <h2 className="md:text-xl sm:text-lg whitespace-nowrap font-semibold mt-2">PAN no.</h2>
+                        <table className="ml-4 border-collapse">
+                            <tbody>
+                                <tr className="border border-black">
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[0]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[1]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[2]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[3]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[4]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[5]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[6]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[7]}</td>
+                                    <td className="border border-black p-1">{data?.PAN?.split("")?.[8]}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                        
+                    <div>
+                        <h2 className="text-2xl font-bold mt-4">Sales Invoices</h2>
+                    </div>
                 </header>
 
                 <div className="flex items-center justify-between gap-2 flex-wrap">
