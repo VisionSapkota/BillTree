@@ -9,6 +9,7 @@ const StoreDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
+    const [PANLen, setPANLen] = useState("")
     const [PAN, setPAN] = useState("")
     const [email, setEmail] = useState("")
     const [resetLoad, setResetLoad] = useState(false)
@@ -66,6 +67,10 @@ const StoreDetails = () => {
         }
     }
 
+    useEffect(() => {
+        setPANLen(`${PAN.length}/9`)
+    }, [PAN])
+
     return (
         <form className="flex flex-col gap-6" onSubmit={submitHandler}>
             <div>
@@ -80,12 +85,12 @@ const StoreDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faPhone} /> Contact Number</label>
-                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
+                <input type="text" className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="98XXXXXXX" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
-                <input type="number" maxLength={9} minLength={9} className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
+                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN <span className={`text-gray-400 ${PANLen === "9/9" ? "text-green-500" : "text-red-500"}`}>{PANLen}</span></label>
+                <input type="text" inputMode="numeric" pattern="\d{9}" maxLength={9} minLength={9} className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div>

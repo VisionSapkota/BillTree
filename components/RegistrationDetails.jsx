@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPhone, faStore, faIdCard, faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,7 @@ const RegistrationDetails = () => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
+    const [PANLen, setPANLen] = useState("")
     const [PAN, setPAN] = useState("")
     const [message, setMessage] = useState("")
     const [isLoad, setIsLoad] = useState(false)
@@ -56,6 +57,10 @@ const RegistrationDetails = () => {
         }
     }
 
+    useEffect(() => {
+        setPANLen(`${PAN.length}/9`);
+    }, [PAN])
+
     return (
         <form className="flex flex-col gap-6" onSubmit={submitHandler}>
             <div>
@@ -70,12 +75,12 @@ const RegistrationDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faPhone} /> Contact Number</label>
-                <input type="number" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="+977 98XXXXXXX" />
+                <input type="number" required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="98XXXXXXX" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN</label>
-                <input type="number" maxLength={9} minLength={9} required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
+                <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN <span className={`text-gray-400 ${PANLen === "9/9" ? "text-green-500" : "text-red-500"}`}>{PANLen}</span></label>
+                <input type="text" inputMode="numeric" pattern="\d{9}" maxLength={9} minLength={9} required className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div className="flex justify-end gap-4">
