@@ -18,14 +18,7 @@ Small to medium businesses in Nepal often face the following challenges in manag
 
 - **Frontend/Backend:** Next.js + React
 - **Database:** Supabase
-
-## Contributors
-
-- [Vision Sapkota](https://www.instagram.com/vision_2082/) - Developer
-- [Kritistha Khatiwada](https://www.instagram.com/anderliner_latrio/) - Cyber Security
-- [Unique Ghimire](https://www.instagram.com/the_common._.1_/) - Graphics Designer/Video Editor
-- [Aaysuh Tiwari](https://www.instagram.com/aayu._.sh._/) - Salesman
-- [Roshik Poudel](https://www.instagram.com/murdoc_19/) - Data Analyst
+- **API:** JSBarcode and hCaptcha
 
 ### Copyright
 © BillTree. All Right Reserved.
