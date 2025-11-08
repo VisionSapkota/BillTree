@@ -90,7 +90,7 @@ const StoreDetails = () => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1"><FontAwesomeIcon icon={faIdCard} /> PAN <span className={`text-gray-400 ${PANLen === "9/9" ? "text-green-500" : "text-red-500"}`}>{PANLen}</span></label>
-                <input type="text" inputMode="numeric" pattern="\d{9}" maxLength={9} minLength={9} className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
+                <input type="text" inputMode="numeric" required pattern="\d{9}" maxLength={9} minLength={9} className="outline-none w-full border border-gray-300 rounded px-4 py-2" value={PAN} onChange={(e) => setPAN(e.target.value)} placeholder="PAN no." />
             </div>
 
             <div>
