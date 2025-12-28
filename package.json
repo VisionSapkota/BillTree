@@ -1,16 +1,17 @@
 {
   "name": "billtree-desktop",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "BillTree a digital transformation system for small Nepali retailers using barcode-based inventory intelligence.",
   "main": "index.js",
   "build": {
     "appId": "com.billtree.app",
     "productName": "BillTree",
+    "icon": "assets/icon.ico",
     "publish": [
       {
         "provider": "github",
         "owner": "VisionSapkota",
-        "repo": "billtree-desktop"
+        "repo": "BillTree"
       }
     ]
   },
