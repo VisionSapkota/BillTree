@@ -6,7 +6,6 @@
   "build": {
     "appId": "com.billtree.app",
     "productName": "BillTree",
-    "icon": "assets/icon.ico",
     "publish": [
       {
         "provider": "github",
