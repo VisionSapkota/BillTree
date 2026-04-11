@@ -4,9 +4,6 @@ import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { supabase } from "@/lib/supabaseClient"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const ForgotPasswordEmailForm = () => {
     const [email, setEmail] = useState("")
