@@ -1,0 +1,34 @@
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #print-cards,
+  #print-cards * {
+    visibility: visible;
+  }
+
+  #card {
+    page-break-inside: avoid;
+  }
+
+  #print-cards {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+    #print-cards button,
+    #print-cards input,
+    #print-cards #action,
+    .print-hidden {
+        display: none;
+    }
+}
+
+@page {
+  size: A4;
+}
