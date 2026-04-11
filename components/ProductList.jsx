@@ -29,7 +29,10 @@ const ProductList = () => {
     const list = async () => {
         setError("")
         const { data: { user }, error: userError } = await supabase.auth.getUser();
+<<<<<<< HEAD
         
+=======
+>>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
         if (userError) {
             setError("User Not Found.", userError);
             router.push('/login')

@@ -573,7 +573,11 @@ const GenerateReceipt = () => {
 
                             <div className="flex justify-end gap-3 mt-6">
                                 <button type="reset" onClick={() => setEdit(false)} className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer">Cancel</button>
+<<<<<<< HEAD
                                 <button type="button" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes</button>
+=======
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Save Changes</button>
+>>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
                             </div>
                         </form>
                     </div>

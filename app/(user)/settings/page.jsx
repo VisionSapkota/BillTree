@@ -3,7 +3,10 @@ import StoreDetails from "@/components/StoreDetails"
 import ChangePassword from "@/components/ChangePassword"
 import Legal from "@/components/Legal"
 import Logout from "@/components/Logout"
+<<<<<<< HEAD
 import UserFooter from "../../../components/userFooter"
+=======
+>>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
 
 const page = () => {
   return (
@@ -36,7 +39,13 @@ const page = () => {
             <Logout />
           </section>
 
+<<<<<<< HEAD
           <UserFooter />
+=======
+          <footer className="text-center text-sm text-gray-500 border-t pt-4 mt-10">
+            &copy; {new Date().getFullYear()} BillTree. All rights reserved.
+          </footer>
+>>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
         </div>
       </main>
     </div>
