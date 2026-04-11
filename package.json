@@ -17,15 +17,9 @@
     "@hcaptcha/react-hcaptcha": "^1.14.0",
     "@supabase/supabase-js": "^2.49.8",
     "jsbarcode": "^3.12.1",
-<<<<<<< HEAD
-    "next": "^16.0.10",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
-=======
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
