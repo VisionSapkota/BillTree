@@ -1,26 +1,20 @@
 "use client"
-<<<<<<< HEAD
 import { useState, useRef } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-=======
 import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
 
 const ForgotPasswordEmailForm = () => {
     const [email, setEmail] = useState("")
     const [msg, setMsg] = useState("")
     const [isLoad, setIsLoad] = useState(false)
-<<<<<<< HEAD
     const [captchaToken, setCaptchaToken] = useState("")
     const captcha = useRef();
-=======
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -30,17 +24,11 @@ const ForgotPasswordEmailForm = () => {
             setIsLoad(true)
             const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-<<<<<<< HEAD
                 captchaToken,
                 redirectTo: `${baseURL}/reset/password`
             })
 
             captcha.current.resetCaptcha();
-=======
-                redirectTo: `${baseURL}/reset/password`
-            })
-
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
             error ? setMsg(error.message) : setMsg("Please check your email for password reset link.")
         } catch (error) {
             console.error(error)
@@ -59,13 +47,11 @@ const ForgotPasswordEmailForm = () => {
                     placeholder="Email" required />
             </div>
 
-<<<<<<< HEAD
             <div className="flex items-center justify-center">
                 <HCaptcha ref={captcha} sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY} onVerify={setCaptchaToken} />
             </div>
 
-=======
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
+
             <button type="submit"
                 className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5 flex items-center justify-center gap-2">
                 Send Password Reset Request <span>{isLoad && <FontAwesomeIcon icon={faSpinner} spin />}</span>

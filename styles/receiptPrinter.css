@@ -1,5 +1,4 @@
 @media print {
-<<<<<<< HEAD
   body * {
     visibility: hidden;
   }
@@ -71,7 +70,6 @@
 
 @page {
   size: A5;
-=======
     body * {
         visibility: hidden;
     }
@@ -134,5 +132,4 @@
     table, tr, td, th {
         page-break-inside: avoid;
     }
->>>>>>> 83ad582034468384225e2e14a8f753d44f184e2e
 }
