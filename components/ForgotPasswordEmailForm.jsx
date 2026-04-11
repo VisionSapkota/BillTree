@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
