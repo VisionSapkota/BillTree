@@ -179,7 +179,7 @@ const SalesReport = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-screen gap-x-6 gap-y-1">
                 <div className="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Today's Sale</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">${todaySale.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {todaySale.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -187,7 +187,7 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Weekly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">${sale7Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale7Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -195,7 +195,7 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Monthly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">${sale30Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale30Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -203,7 +203,7 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-yellow-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Yearly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">${sale365Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale365Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
