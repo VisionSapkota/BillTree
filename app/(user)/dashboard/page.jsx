@@ -1,5 +1,6 @@
 "use client"
 import Sidebar from "@/components/Sidebar"
+import SalesReport from "@/components/SalesReport"
 import { supabase } from "@/lib/supabaseClient"
 import { useState, useEffect } from "react"
 
@@ -28,6 +29,7 @@ const page = () => {
             </p>
           </div>
         </div>
+        <SalesReport />
       </main>
     </div>
   )

@@ -85,13 +85,13 @@ const GenerateReceipt = () => {
                 setRate(value[0].mp);
                 setSpcDiscount(value[0].discount);
                 setStock(value[0].stock);
-                setQuantity(0);
+                setQuantity(1);
             } else if (value[0].barcode === barcodeNum && isBarcode) {
                 setProductName(value[0].productName);
                 setRate(value[0].mp);
                 setSpcDiscount(value[0].discount);
                 setStock(value[0].stock);
-                setQuantity(0);
+                setQuantity(1);
             }
 
             if (value[0].productName === editName && !isEditBarcode) {
@@ -99,13 +99,13 @@ const GenerateReceipt = () => {
                 setEditRate(value[0].mp);
                 setEditSpcDiscount(value[0].discount);
                 setEditStock(value[0].stock);
-                setEditQuantity(0);
+                setEditQuantity(1);
             } else if (value[0].barcode === editBarcode && isEditBarcode) {
                 setEditName(value[0].productName);
                 setEditRate(value[0].mp);
                 setEditSpcDiscount(value[0].discount);
                 setEditStock(value[0].stock);
-                setEditQuantity(0);
+                setEditQuantity(1);
             }
         })
     }, [productName, barcodeNum, editBarcode, editName, finalData])
@@ -490,7 +490,7 @@ const GenerateReceipt = () => {
 
                 <div>
                     <label className="block font-medium text-gray-700">Quantity</label>
-                    <input type="number" value={quantity} ref={quantityRef} min="0" step="0.01" onChange={(e) => setQuantity(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
+                    <input type="number" value={quantity} ref={quantityRef} min="1" step="0.01" onChange={(e) => setQuantity(e.target.value)} className="w-full p-2 text-black border border-gray-300 rounded outline-none"
                         placeholder="Enter Quantity" />
                 </div>
 
@@ -499,7 +499,7 @@ const GenerateReceipt = () => {
                         className="bg-[#111] text-white px-4 py-2 rounded outline-none hover:bg-gray-800 transition cursor-pointer">Add Entry {addLoader && <FontAwesomeIcon icon={faSpinner} spin />}</button>
 
                     <div className="flex justify-between flex-col bg-white border overflow-x-auto border-gray-200 rounded-lg px-5 py-2 shadow-sm">
-                        <p className="text-green-600 text-4xl font-bold">Rs. {total.toLocaleString('en-US', {
+                        <p className="text-green-600 text-4xl font-bold">Rs. {total.toLocaleString(navigator.language, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
                         })}</p>
