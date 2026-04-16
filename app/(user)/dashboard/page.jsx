@@ -3,6 +3,9 @@ import Sidebar from "@/components/Sidebar"
 import SalesReport from "@/components/SalesReport"
 import { supabase } from "@/lib/supabaseClient"
 import { useState, useEffect } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link"
 
 const page = () => {
   const [userName, setUserName] = useState("")
@@ -20,7 +23,7 @@ const page = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 mt-4 md:ml-70 md:mt-0">
-        <div>
+        <div class="mb-20">
           <h1 className="text-3xl font-bold mb-4 text-black">Home Page</h1>
           <div className="bg-white p-6 rounded shadow">
             <p className="text-xl text-gray-700 font-semibold">👋 Welcome back, {userName}!</p>
@@ -30,6 +33,10 @@ const page = () => {
           </div>
         </div>
         <SalesReport />
+        
+        <div className="flex items-center justify-end">
+            <Link href="/reports" className="bg-white px-8 py-2 border border-[#ccc] hover:bg-[#f0f0f0] hover:border-[#999] rounded-lg font-bold cursor-pointer">View more <FontAwesomeIcon icon={faArrowRight} /></Link>
+        </div>
       </main>
     </div>
   )

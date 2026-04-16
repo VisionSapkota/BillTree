@@ -21,10 +21,10 @@ const SalesReport = () => {
     const router = useRouter();
 
     useEffect(() => {
-        todaySaleData();
+        saleData();
     }, [])
 
-    const todaySaleData = async () => {
+    const saleData = async () => {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
 
         if (userError) {
@@ -34,7 +34,7 @@ const SalesReport = () => {
 
         const { data: [{ details }], error } = await supabase.from("receipts").select("details").eq("id", user.id);
 
-        if (error) console.error("Something went wrong.", error);
+        if (error) console.error("We couldn't find your data.", error);
 
         // Today's date
         const today = new Date();
@@ -173,13 +173,13 @@ const SalesReport = () => {
     }, [sale365Day, sale730Day])
 
     return (
-        <>
-            <h1 className="text-3xl font-bold mt-20 text-black">Reports</h1>
+        <div>
+            <h1 className="text-3xl font-bold text-black">Reports</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-screen gap-x-6 gap-y-1">
                 <div className="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Today's Sale</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {todaySale.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1"><span className="text-xl">Rs.</span> {todaySale.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -187,7 +187,7 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Weekly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale7Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1"><span className="text-xl">Rs.</span> {sale7Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -195,7 +195,7 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Monthly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale30Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1"><span className="text-xl">Rs.</span> {sale30Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
@@ -203,14 +203,14 @@ const SalesReport = () => {
                 </div>
                 <div className="bg-white p-4 rounded-xl border-l-4 border-yellow-500 shadow my-5 flex flex-1 flex-col">
                     <p className="font-semibold text-lg">Yearly Revenue</p>
-                    <p className="text-2xl font-bold mt-5 mb-1">Rs. {sale365Day.toLocaleString(navigator.language, {
+                    <p className="text-2xl font-bold mt-5 mb-1"><span className="text-xl">Rs.</span> {sale365Day.toLocaleString(navigator.language, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     })}</p>
                     <p className={`text-xs ${perc365 >= 0 ? "text-green-500" : "text-red-500"}`}>{perc365 !== null ? perc365 >= 0 ? "+" : "" : ""}{perc365 !== null ? perc365.toFixed(2) : "N/A"}% from previous 365 days</p>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
