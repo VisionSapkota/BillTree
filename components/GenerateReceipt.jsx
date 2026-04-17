@@ -80,7 +80,7 @@ const GenerateReceipt = () => {
     useEffect(() => {
         finalData.map((value) => {
 
-            if (value[0].productName === productName && !isBarcode) {
+            if (value[0].productName.toUpperCase() === productName.toUpperCase() && !isBarcode) {
                 setBarcodeNum(value[0].barcode);
                 setRate(value[0].mp);
                 setSpcDiscount(value[0].discount);
@@ -94,7 +94,7 @@ const GenerateReceipt = () => {
                 setQuantity(1);
             }
 
-            if (value[0].productName === editName && !isEditBarcode) {
+            if (value[0].productName.toUpperCase() === editName.toUpperCase() && !isEditBarcode) {
                 setEditBarcode(value[0].barcode);
                 setEditRate(value[0].mp);
                 setEditSpcDiscount(value[0].discount);
@@ -109,6 +109,7 @@ const GenerateReceipt = () => {
             }
         })
     }, [productName, barcodeNum, editBarcode, editName, finalData])
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -129,7 +130,7 @@ const GenerateReceipt = () => {
 
             let isDuplicate = false;
             receiptData.map((value) => {
-                if (value[0].barcode === barcodeNum || value[0].name === productName) {
+                if (value[0].barcode === barcodeNum || value[0].name.toUpperCase() === productName.toUpperCase()) {
                     isDuplicate = true;
                 }
             })
@@ -150,7 +151,7 @@ const GenerateReceipt = () => {
             }
 
             const matchedProduct = productDetails.find(
-                value => value[0].barcode === barcodeNum && value[0].productName === productName
+                value => value[0].barcode === barcodeNum && value[0].productName.toUpperCase() === productName.toUpperCase()
             );
 
             if (!matchedProduct) {
@@ -384,7 +385,7 @@ const GenerateReceipt = () => {
 
             let isDuplicate = false;
             receiptData.filter((_, i) => i !== idx).map((value) => {
-                if (value[0].barcode === editBarcode || value[0].name === editName) {
+                if (value[0].barcode === editBarcode || value[0].name.toUpperCase() === editName.toUpperCase()) {
                     isDuplicate = true;
                 }
             })
@@ -404,7 +405,7 @@ const GenerateReceipt = () => {
             }
 
             const matchedProduct = productDetails.find(
-                value => value[0].barcode === editBarcode && value[0].productName === editName
+                value => value[0].barcode === editBarcode && value[0].productName.toUpperCase() === editName.toUpperCase()
             );
 
             if (!matchedProduct) {

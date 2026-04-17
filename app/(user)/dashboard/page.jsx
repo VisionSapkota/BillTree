@@ -23,7 +23,7 @@ const page = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 mt-4 md:ml-70 md:mt-0">
-        <div class="mb-20">
+        <div className="mb-20">
           <h1 className="text-3xl font-bold mb-4 text-black">Home Page</h1>
           <div className="bg-white p-6 rounded shadow">
             <p className="text-xl text-gray-700 font-semibold">👋 Welcome back, {userName}!</p>
